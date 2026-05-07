@@ -1,0 +1,38 @@
+title: El-Teori Kursus
+description: Self-study electrical theory course in Danish, English and Arabic.
+
+# Use the standard GitHub Pages plugin set so .md links to other .md files
+# get rewritten to .html on the deployed site.
+plugins:
+  - jekyll-relative-links
+  - jekyll-default-layout
+  - jekyll-optional-front-matter
+
+relative_links:
+  enabled: true
+  collections: true
+
+# Render every README.md as index.html, in subfolders too.
+readme_index:
+  enabled: true
+  remove_originals: false
+
+include:
+  - README.md
+  - LICENSE
+
+exclude:
+  - .github
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - node_modules
+
+# Don't run Liquid templating on the interactive HTML tools — they contain
+# JavaScript with characters that can confuse Liquid.
+defaults:
+  - scope:
+      path: "interaktiv"
+    values:
+      layout: null
+      sitemap: false
