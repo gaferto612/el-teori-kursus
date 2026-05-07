@@ -10,6 +10,7 @@ Materialet er bygget som **resuméer + opgaver + interaktive øvelser** — på 
 ## 📚 Indhold (23 kapitler)
 
 ### Del 1 — Matematik og grundlag
+
 | # | Kapitel | الفصل |
 |---|---------|-------|
 | 1 | [Tal og grundlæggende regning](kapitler/01-tal-og-grundlaeggende-regning.md) | الأرقام والحساب الأساسي |
@@ -20,12 +21,14 @@ Materialet er bygget som **resuméer + opgaver + interaktive øvelser** — på 
 | 6 | [Måleenheder](kapitler/06-maaleenheder.md) | وحدات القياس |
 
 ### Del 2 — Naturlære
+
 | # | Kapitel | الفصل |
 |---|---------|-------|
 | 7 | [Kemi](kapitler/07-kemi.md) | الكيمياء |
 | 8 | [Luftteori](kapitler/08-luftteori.md) | نظرية الهواء |
 
 ### Del 3 — Elektroteknik (kerne)
+
 | # | Kapitel | الفصل |
 |---|---------|-------|
 | 9 | [Elektriske grundbegreber](kapitler/09-elektriske-grundbegreber.md) | المفاهيم الكهربائية الأساسية |
@@ -35,6 +38,7 @@ Materialet er bygget som **resuméer + opgaver + interaktive øvelser** — på 
 | 13 | [3-faset vekselstrømsteori](kapitler/13-3-faset-vekselstroemsteori.md) | نظرية التيار المتردد ثلاثي الطور |
 
 ### Del 4 — Komponenter og elektronik
+
 | # | Kapitel | الفصل |
 |---|---------|-------|
 | 14 | [Modstande og kondensatorer](kapitler/14-modstande-og-kondensatorer.md) | المقاومات والمكثفات |
@@ -46,6 +50,7 @@ Materialet er bygget som **resuméer + opgaver + interaktive øvelser** — på 
 | 20 | [Kombinationslogik](kapitler/20-kombinationslogik.md) | المنطق التوافقي |
 
 ### Del 5 — Måleteknik
+
 | # | Kapitel | الفصل |
 |---|---------|-------|
 | 21 | [Instrumenttyper](kapitler/21-instrumenttyper.md) | أنواع الأجهزة |
