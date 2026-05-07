@@ -142,7 +142,7 @@ XNOR er **1** når indgangene er **ens** = "equal" detektor.
 | XOR | skjold med ekstra bue | Indgangene er forskellige |
 | XNOR | XOR + cirkel | Indgangene er ens |
 
-> 🛠 [Brug det interaktive værktøj — Logik-gates](../interaktiv/logik-gates.html)
+> 🛠 [Brug det interaktive værktøj — Logik-gates](../../interaktiv/logik-gates.html)
 
 ---
 
@@ -309,5 +309,5 @@ Logikkredsløb blev bygget med discrete IC'er.
 ## ➡️ Næste skridt
 
 - 📝 [Opgaver til kapitel 20](../opgaver/20-opgaver.md)
-- 🧮 [Logik-gate simulator (interaktiv)](../interaktiv/logik-gates.html)
+- 🧮 [Logik-gate simulator (interaktiv)](../../interaktiv/logik-gates.html)
 - ➡️ [Kapitel 21 — Instrumenttyper](21-instrumenttyper.md)

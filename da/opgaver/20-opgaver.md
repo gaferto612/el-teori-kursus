@@ -79,4 +79,4 @@ Det er derfor NAND kaldes en universel port — alle logiske funktioner kan bygg
 
 ---
 
-⬅ [Kap 20](../kapitler/20-kombinationslogik.md) | [🧠 Logik-gates](../interaktiv/logik-gates.html) | [Næste →](../kapitler/21-instrumenttyper.md)
+⬅ [Kap 20](../kapitler/20-kombinationslogik.md) | [🧠 Logik-gates](../../interaktiv/logik-gates.html) | [Næste →](../kapitler/21-instrumenttyper.md)

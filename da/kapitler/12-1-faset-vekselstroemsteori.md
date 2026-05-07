@@ -74,7 +74,7 @@ $$U_{rms} = \frac{U_{peak}}{\sqrt{2}} \approx 0{,}707 \cdot U_{peak}$$
 For en halv periode:
 $$U_{middel} = \frac{2 \cdot U_{peak}}{\pi} \approx 0{,}637 \cdot U_{peak}$$
 
-> 🛠 [Vekselstrøm visualizer](../interaktiv/vekselstroem.html)
+> 🛠 [Vekselstrøm visualizer](../../interaktiv/vekselstroem.html)
 
 ### Sammenfattende — formfaktorer
 
@@ -264,5 +264,5 @@ $$\cos(\varphi) = 0{,}187$$
 ## ➡️ Næste skridt
 
 - 📝 [Opgaver til kapitel 12](../opgaver/12-opgaver.md)
-- 🌊 [Vekselstrøm visualizer (interaktiv)](../interaktiv/vekselstroem.html)
+- 🌊 [Vekselstrøm visualizer (interaktiv)](../../interaktiv/vekselstroem.html)
 - ➡️ [Kapitel 13 — 3-faset vekselstrøm](13-3-faset-vekselstroemsteori.md)

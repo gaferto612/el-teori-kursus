@@ -188,5 +188,5 @@ I BCD repræsenterer hvert decimalciffer **uafhængigt** af 4 bits:
 ## ➡️ Næste skridt
 
 - 📝 [Opgaver til kapitel 5](../opgaver/05-opgaver.md)
-- 🧮 [Talsystem-konverter (interaktiv)](../interaktiv/talsystem-konverter.html)
+- 🧮 [Talsystem-konverter (interaktiv)](../../interaktiv/talsystem-konverter.html)
 - ➡️ [Kapitel 6 — Måleenheder](06-maaleenheder.md)

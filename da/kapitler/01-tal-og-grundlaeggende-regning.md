@@ -170,7 +170,7 @@ $$10101_2 = 1\cdot 2^4 + 0\cdot 2^3 + 1\cdot 2^2 + 0\cdot 2^1 + 1\cdot 2^0 = 16 
 | 10 | 1010 | A |
 | 15 | 1111 | F |
 
-> 🛠 Brug det interaktive værktøj: [**Talsystem-konverter**](../interaktiv/talsystem-konverter.html)
+> 🛠 Brug det interaktive værktøj: [**Talsystem-konverter**](../../interaktiv/talsystem-konverter.html)
 
 ---
 
@@ -187,5 +187,5 @@ $$10101_2 = 1\cdot 2^4 + 0\cdot 2^3 + 1\cdot 2^2 + 0\cdot 2^1 + 1\cdot 2^0 = 16 
 ## ➡️ Næste skridt
 
 - 📝 [Opgaver til kapitel 1](../opgaver/01-opgaver.md)
-- 🧮 [Talsystem-konverter (interaktiv)](../interaktiv/talsystem-konverter.html)
+- 🧮 [Talsystem-konverter (interaktiv)](../../interaktiv/talsystem-konverter.html)
 - ➡️ [Kapitel 2 — Geometri](02-geometri.md)
