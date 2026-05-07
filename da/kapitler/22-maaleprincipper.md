@@ -309,5 +309,5 @@ $$\frac{R_1}{R_2} = \frac{R_x}{R_3}$$
 Du har nu læst alle 22 kapitler. Næste trin:
 
 - 📝 [Opgaver til kapitel 22](../opgaver/22-opgaver.md)
-- 📝 [Quiz på tværs af alle kapitler](../interaktiv/quiz.html)
-- 🏁 [Tilbage til oversigt](../README.md)
+- 📝 [Quiz på tværs af alle kapitler](../../interaktiv/quiz.html)
+- 🏁 [Tilbage til oversigt](../)

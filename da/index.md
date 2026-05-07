@@ -1,6 +1,6 @@
 # ⚡ El-Teori Kursus
 
-**Sprog:** **🇩🇰 Dansk** · [🇬🇧 English](../en/README.md) · [🇸🇦 العربية](../ar/README.md) · [🏠 Forside](../README.md)
+**Sprog:** **🇩🇰 Dansk** · [🇬🇧 English](../en/) · [🇸🇦 العربية](../ar/) · [🏠 Forside](../)
 
 ![License](https://img.shields.io/badge/license-MIT-blue) ![Kapitler](https://img.shields.io/badge/kapitler-22-green) ![Værktøjer](https://img.shields.io/badge/interaktive%20værktøjer-6-orange)
 

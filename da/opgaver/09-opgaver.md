@@ -58,4 +58,4 @@ Det er **livsfarligt**. Allerede 50 mA kan udløse hjerteflimren. HFI/HPFI udlø
 
 ---
 
-⬅ [Kap 9](../kapitler/09-elektriske-grundbegreber.md) | [🧮 Ohms lov](../interaktiv/ohms-lov.html) | [Næste →](../kapitler/10-jaevnstroemsteori.md)
+⬅ [Kap 9](../kapitler/09-elektriske-grundbegreber.md) | [🧮 Ohms lov](../../interaktiv/ohms-lov.html) | [Næste →](../kapitler/10-jaevnstroemsteori.md)

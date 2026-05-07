@@ -74,4 +74,4 @@ c) $\sin \varphi = \sqrt{1 - 0{,}64} = 0{,}6$ → $Q = 2300 \cdot 0{,}6 = 1380$ 
 
 ---
 
-⬅ [Kap 12](../kapitler/12-1-faset-vekselstroemsteori.md) | [🌊 Vekselstrøm](../interaktiv/vekselstroem.html) | [Næste →](../kapitler/13-3-faset-vekselstroemsteori.md)
+⬅ [Kap 12](../kapitler/12-1-faset-vekselstroemsteori.md) | [🌊 Vekselstrøm](../../interaktiv/vekselstroem.html) | [Næste →](../kapitler/13-3-faset-vekselstroemsteori.md)

@@ -68,4 +68,4 @@ $$R_x = R_3 \cdot \frac{R_1}{R_2} = 470 \cdot \frac{100}{100} = 470 \text{ Ω}$$
 
 🎓 **Tillykke! Du har gennemført alle opgaver i kurset.**
 
-⬅ [Kap 22](../kapitler/22-maaleprincipper.md) | [📝 Tag quizzen](../interaktiv/quiz.html) | [🏁 Tilbage til oversigt](../README.md)
+⬅ [Kap 22](../kapitler/22-maaleprincipper.md) | [📝 Tag quizzen](../../interaktiv/quiz.html) | [🏁 Tilbage til oversigt](../)

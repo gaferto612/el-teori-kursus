@@ -172,7 +172,7 @@ $$I = \frac{U}{R} = \frac{12}{100} = 0{,}12 \text{ A} = 120 \text{ mA}$$
 **Eksempel 2**: Hvor stor er modstanden i en glødepære, når den ved 230 V optager 0,3 A?
 $$R = \frac{U}{I} = \frac{230}{0{,}3} \approx 767 \text{ Ω}$$
 
-> 🛠 Brug det interaktive værktøj: [**Ohms lov-beregner**](../interaktiv/ohms-lov.html)
+> 🛠 Brug det interaktive værktøj: [**Ohms lov-beregner**](../../interaktiv/ohms-lov.html)
 
 ---
 
@@ -279,5 +279,5 @@ Tre nødvendige dele:
 ## ➡️ Næste skridt
 
 - 📝 [Opgaver til kapitel 9](../opgaver/09-opgaver.md)
-- 🧮 [Ohms lov-beregner (interaktiv)](../interaktiv/ohms-lov.html)
+- 🧮 [Ohms lov-beregner (interaktiv)](../../interaktiv/ohms-lov.html)
 - ➡️ [Kapitel 10 — Jævnstrømsteori](10-jaevnstroemsteori.md)

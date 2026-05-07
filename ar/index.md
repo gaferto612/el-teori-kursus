@@ -2,7 +2,7 @@
 
 # ⚡ دورة النظرية الكهربائية
 
-**اللغة:** [🇩🇰 Dansk](../da/README.md) · [🇬🇧 English](../en/README.md) · **🇸🇦 العربية** · [🏠 الرئيسية](../README.md)
+**اللغة:** [🇩🇰 Dansk](../da/) · [🇬🇧 English](../en/) · **🇸🇦 العربية** · [🏠 الرئيسية](../)
 
 ![License](https://img.shields.io/badge/license-MIT-blue) ![Chapters](https://img.shields.io/badge/الفصول-22-green) ![Tools](https://img.shields.io/badge/أدوات%20تفاعلية-6-orange)
 

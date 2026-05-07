@@ -139,7 +139,7 @@ $$R_{12} = \frac{10 \cdot 20}{10 + 20} = 6{,}67 \text{ Ω}$$
 **Trin 2**: $R_{12}$ i serie med $R_3$:
 $$R_{tot} = 6{,}67 + 14 = 20{,}67 \text{ Ω}$$
 
-> 🛠 [Brug det interaktive værktøj — Serie & parallel](../interaktiv/serie-parallel.html)
+> 🛠 [Brug det interaktive værktøj — Serie & parallel](../../interaktiv/serie-parallel.html)
 
 ---
 
@@ -222,5 +222,5 @@ $$\Delta U = 2 \cdot l \cdot \frac{\rho \cdot I}{A}$$
 ## ➡️ Næste skridt
 
 - 📝 [Opgaver til kapitel 10](../opgaver/10-opgaver.md)
-- 🧮 [Serie & parallel beregner](../interaktiv/serie-parallel.html)
+- 🧮 [Serie & parallel beregner](../../interaktiv/serie-parallel.html)
 - ➡️ [Kapitel 11 — Magnetisme](11-magnetisme.md)

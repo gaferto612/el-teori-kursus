@@ -72,4 +72,4 @@ b) **Parallel**: spændingen er ens. $P = U^2/R$ → den **mindste** modstand (1
 
 ---
 
-⬅ [Kap 10](../kapitler/10-jaevnstroemsteori.md) | [🧮 Serie/parallel](../interaktiv/serie-parallel.html) | [Næste →](../kapitler/11-magnetisme.md)
+⬅ [Kap 10](../kapitler/10-jaevnstroemsteori.md) | [🧮 Serie/parallel](../../interaktiv/serie-parallel.html) | [Næste →](../kapitler/11-magnetisme.md)

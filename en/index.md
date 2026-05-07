@@ -1,6 +1,6 @@
 # ⚡ Electrical Theory Course
 
-**Language:** [🇩🇰 Dansk](../da/README.md) · **🇬🇧 English** · [🇸🇦 العربية](../ar/README.md) · [🏠 Home](../README.md)
+**Language:** [🇩🇰 Dansk](../da/) · **🇬🇧 English** · [🇸🇦 العربية](../ar/) · [🏠 Home](../)
 
 ![License](https://img.shields.io/badge/license-MIT-blue) ![Chapters](https://img.shields.io/badge/chapters-22-green) ![Tools](https://img.shields.io/badge/interactive%20tools-6-orange)
 
