@@ -2,37 +2,19 @@
 
 ![License](https://img.shields.io/badge/license-MIT-blue) ![Chapters](https://img.shields.io/badge/chapters-22-green) ![Tools](https://img.shields.io/badge/interactive%20tools-6-orange) ![Languages](https://img.shields.io/badge/languages-3-purple)
 
-<table>
-<tr>
-<td align="center" width="33%">
+## Choose your language / Vælg sprog / اختر اللغة
 
-### 🇩🇰 Dansk
-
-**[→ Start på dansk](da/)**
+### 🇩🇰 [Start på dansk →](da/)
 
 Selvstudie-kursus i el-teori baseret på lærebogen fra EFU / Den Jydske Haandværkerskole.
 
-</td>
-<td align="center" width="33%">
-
-### 🇬🇧 English
-
-**[→ Start in English](en/)**
+### 🇬🇧 [Start in English →](en/)
 
 Self-study electrical theory course based on the EFU / Den Jydske Haandværkerskole textbook.
 
-</td>
-<td align="center" width="33%">
-
-### 🇸🇦 العربية
-
-**[→ ابدأ بالعربية](ar/)**
+### 🇸🇦 [ابدأ بالعربية ←](ar/)
 
 دورة دراسية ذاتية في النظرية الكهربائية، مبنية على كتاب EFU / مدرسة الحرفيين اليوتلاندية.
-
-</td>
-</tr>
-</table>
 
 ---
 
