@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Serie & parallel modstand | El-Teori Kursus</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --card: #1a2332;
+    --accent: #ffd700;
+    --accent2: #4dd0e1;
+    --green: #6dd9b3;
+    --orange: #ff9f43;
+    --text: #e0e6ed;
+    --muted: #8da4b8;
+    --border: #2a3f56;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    line-height: 1.6;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1 { color: var(--accent); font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .subtitle { color: var(--muted); margin-bottom: 2rem; }
+  .ar { color: var(--muted); font-size: 0.85em; direction: rtl; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .tab { background: var(--card); color: var(--text); border: 1px solid var(--border); padding: 10px 20px; border-radius: 8px; cursor: pointer; flex: 1; font-weight: 600; }
+  .tab.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .resistor-row { display: grid; grid-template-columns: 80px 1fr 100px; gap: 12px; align-items: center; margin-bottom: 12px; }
+  input[type="number"] {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px; font-size: 1rem; font-family: inherit;
+  }
+  input[type="number"]:focus { outline: none; border-color: var(--accent); }
+  .resistor-label { color: var(--accent2); font-weight: 600; }
+  .voltage-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .voltage-section .resistor-row { grid-template-columns: 200px 1fr 100px; }
+  .results { background: rgba(109, 217, 179, 0.05); border-left: 3px solid var(--green);
+             padding: 16px; border-radius: 4px; margin-top: 20px; }
+  .results h3 { color: var(--green); margin-bottom: 12px; }
+  .result-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed rgba(141,164,184,0.2); }
+  .result-row:last-child { border-bottom: none; }
+  .result-val { color: var(--accent); font-weight: 600; font-family: "Courier New", monospace; }
+  .diagram {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    margin: 16px 0;
+    font-family: "Courier New", monospace;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    overflow-x: auto;
+  }
+  button { background: var(--accent); color: var(--bg); border: none; padding: 8px 16px;
+           border-radius: 8px; cursor: pointer; font-weight: 600; margin-right: 8px; }
+  button:hover { opacity: 0.85; }
+  button.secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+  .back-link { display: inline-block; color: var(--accent2); text-decoration: none; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="../README.md" class="back-link">← Tilbage til oversigt</a>
+
+  <h1>🔁 Serie & parallel modstand</h1>
+  <p class="subtitle">Beregner resulterende modstand, fordeling af strøm og spænding<br><span class="ar">حاسبة المقاومات على التسلسل والتوازي</span></p>
+
+  <div class="card">
+    <div class="tabs">
+      <button class="tab active" id="tab-serie" onclick="setMode('serie')">Serie ──[R]──[R]──</button>
+      <button class="tab" id="tab-parallel" onclick="setMode('parallel')">Parallel ╠══╣</button>
+    </div>
+
+    <div id="resistors-container">
+      <!-- dynamisk indsat -->
+    </div>
+
+    <div style="margin-bottom:16px">
+      <button onclick="addResistor()">+ Tilføj modstand</button>
+      <button class="secondary" onclick="removeResistor()">− Fjern</button>
+    </div>
+
+    <div class="voltage-section">
+      <div class="resistor-row">
+        <span class="resistor-label">Spænding U (V) <span class="ar">الجهد</span></span>
+        <input type="number" id="voltage" step="any" placeholder="fx 12" oninput="calculate()">
+        <span style="color:var(--muted)">valgfri</span>
+      </div>
+    </div>
+
+    <div class="diagram" id="diagram"></div>
+
+    <div class="results" id="results">
+      <h3 id="results-title">Resultater</h3>
+      <div id="output"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let mode = 'serie';
+  let resistors = [100, 220, 470];
+
+  function setMode(m) {
+    mode = m;
+    document.getElementById('tab-serie').classList.toggle('active', m === 'serie');
+    document.getElementById('tab-parallel').classList.toggle('active', m === 'parallel');
+    render();
+  }
+
+  function addResistor() {
+    if (resistors.length >= 5) { alert('Maks 5 modstande'); return; }
+    resistors.push(100);
+    render();
+  }
+
+  function removeResistor() {
+    if (resistors.length <= 2) { alert('Min 2 modstande'); return; }
+    resistors.pop();
+    render();
+  }
+
+  function render() {
+    const c = document.getElementById('resistors-container');
+    c.innerHTML = '';
+    resistors.forEach((val, i) => {
+      const row = document.createElement('div');
+      row.className = 'resistor-row';
+      row.innerHTML = `
+        <span class="resistor-label">R${i+1} (Ω)</span>
+        <input type="number" step="any" value="${val}" oninput="updateR(${i}, this.value)">
+        <span style="color:var(--muted)">${formatOhm(val)}</span>
+      `;
+      c.appendChild(row);
+    });
+    calculate();
+  }
+
+  function updateR(i, val) {
+    resistors[i] = parseFloat(val) || 0;
+    calculate();
+  }
+
+  function formatOhm(v) {
+    if (v >= 1e6) return (v/1e6).toFixed(2) + ' MΩ';
+    if (v >= 1e3) return (v/1e3).toFixed(2) + ' kΩ';
+    return v.toFixed(0) + ' Ω';
+  }
+
+  function calculate() {
+    const valid = resistors.filter(r => r > 0);
+    if (valid.length < 2) return;
+
+    let Rtot = 0;
+    let formula = '';
+
+    if (mode === 'serie') {
+      Rtot = valid.reduce((sum, r) => sum + r, 0);
+      formula = 'R<sub>tot</sub> = ' + valid.map((r,i) => 'R'+(i+1)).join(' + ') + ' = ' + valid.join(' + ') + ' = ' + Rtot.toFixed(2) + ' Ω';
+    } else {
+      const inv = valid.reduce((sum, r) => sum + 1/r, 0);
+      Rtot = 1 / inv;
+      formula = '1/R<sub>tot</sub> = ' + valid.map((r,i) => '1/R'+(i+1)).join(' + ') + ' → R<sub>tot</sub> = ' + Rtot.toFixed(2) + ' Ω';
+    }
+
+    let html = `
+      <div class="result-row"><span>Resulterende modstand:</span><span class="result-val">${formatOhm(Rtot)}</span></div>
+      <div class="result-row" style="font-size:0.9em;color:var(--muted)"><span colspan=2>${formula}</span></div>
+    `;
+
+    const U = parseFloat(document.getElementById('voltage').value);
+    if (!isNaN(U) && U > 0) {
+      const Itot = U / Rtot;
+      html += `<div class="result-row"><span>Total strøm I:</span><span class="result-val">${formatVal(Itot, 'A')}</span></div>`;
+      html += `<div class="result-row"><span>Total effekt P:</span><span class="result-val">${formatVal(U * Itot, 'W')}</span></div>`;
+
+      html += '<h4 style="margin-top:16px;color:var(--accent2)">Per modstand:</h4>';
+      valid.forEach((r, i) => {
+        let U_r, I_r;
+        if (mode === 'serie') {
+          I_r = Itot;  // strømmen er ens i serie
+          U_r = I_r * r;
+        } else {
+          U_r = U;  // spændingen er ens i parallel
+          I_r = U_r / r;
+        }
+        const P_r = U_r * I_r;
+        html += `<div class="result-row"><span>R${i+1} (${formatOhm(r)}):</span><span class="result-val">U=${formatVal(U_r,'V')}, I=${formatVal(I_r,'A')}, P=${formatVal(P_r,'W')}</span></div>`;
+      });
+    }
+
+    document.getElementById('output').innerHTML = html;
+    document.getElementById('results-title').textContent = mode === 'serie' ? 'Serieforbindelse — Resultater' : 'Parallelforbindelse — Resultater';
+    drawDiagram(valid);
+  }
+
+  function drawDiagram(rs) {
+    let d = '';
+    if (mode === 'serie') {
+      d = '──' + rs.map((r,i) => `[R${i+1}]`).join('──') + '──';
+    } else {
+      d = '   ┌' + rs.map((r,i) => `[R${i+1}]`).join('─┬─') + '─┐\n';
+      d += '   │' + rs.map(() => '────').join('─┴─') + '─│\n';
+      d += '───┴─' + rs.map(() => '').join('') + '─────';
+    }
+    document.getElementById('diagram').textContent = d;
+  }
+
+  function formatVal(v, unit) {
+    if (v >= 1e3) return (v/1e3).toFixed(3) + ' k' + unit;
+    if (v >= 1) return v.toFixed(3) + ' ' + unit;
+    if (v >= 1e-3) return (v*1e3).toFixed(2) + ' m' + unit;
+    return (v*1e6).toFixed(2) + ' μ' + unit;
+  }
+
+  render();
+</script>
+</body>
+</html>

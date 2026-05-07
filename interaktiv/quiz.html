@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz | El-Teori Kursus</title>
+<style>
+  :root {
+    --bg: #0f1419; --card: #1a2332; --accent: #ffd700; --accent2: #4dd0e1;
+    --green: #6dd9b3; --red: #ff6b6b; --text: #e0e6ed; --muted: #8da4b8; --border: #2a3f56;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.6; }
+  .container { max-width: 800px; margin: 0 auto; }
+  h1 { color: var(--accent); font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .subtitle { color: var(--muted); margin-bottom: 2rem; }
+  .ar { color: var(--muted); font-size: 0.85em; direction: rtl; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+  .progress-bar { background: var(--bg); border-radius: 8px; height: 12px; overflow: hidden; margin-bottom: 16px; }
+  .progress-fill { background: var(--accent); height: 100%; transition: width 0.3s; }
+  .question-num { color: var(--muted); font-size: 0.9em; margin-bottom: 8px; }
+  .question { font-size: 1.15em; font-weight: 600; margin-bottom: 8px; }
+  .chapter { color: var(--accent2); font-size: 0.85em; margin-bottom: 16px; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option { background: var(--bg); border: 2px solid var(--border); padding: 12px 16px; border-radius: 8px;
+            cursor: pointer; text-align: left; color: var(--text); font-size: 1em; transition: all 0.15s; }
+  .option:hover:not(.disabled) { border-color: var(--accent2); }
+  .option.correct { background: rgba(109,217,179,0.15); border-color: var(--green); color: var(--green); }
+  .option.wrong { background: rgba(255,107,107,0.15); border-color: var(--red); color: var(--red); }
+  .option.disabled { cursor: default; }
+  .feedback { margin-top: 16px; padding: 12px; border-radius: 8px; display: none; }
+  .feedback.show { display: block; }
+  .feedback.correct { background: rgba(109,217,179,0.1); border-left: 3px solid var(--green); }
+  .feedback.wrong { background: rgba(255,107,107,0.1); border-left: 3px solid var(--red); }
+  button { background: var(--accent); color: var(--bg); border: none; padding: 12px 24px;
+           border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 1em; margin-top: 16px; }
+  button:hover { opacity: 0.85; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+  .start-screen, .end-screen { text-align: center; padding: 40px 20px; }
+  .score-big { font-size: 3rem; color: var(--accent); font-weight: 700; }
+  .score-pct { font-size: 1.5rem; color: var(--accent2); }
+  .back-link { display: inline-block; color: var(--accent2); text-decoration: none; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="../README.md" class="back-link">← Tilbage til oversigt</a>
+
+  <h1>📝 Quiz — El-Teori</h1>
+  <p class="subtitle">50 spørgsmål blandet på tværs af alle kapitler<br><span class="ar">اختبار شامل في 50 سؤال</span></p>
+
+  <div class="card" id="start-screen">
+    <div class="start-screen">
+      <h2 style="color:var(--accent2);margin-bottom:16px">Klar til at teste din viden?</h2>
+      <p style="color:var(--muted);margin-bottom:24px">Quizzen indeholder spørgsmål fra alle 22 kapitler.<br>Vælg antal spørgsmål nedenfor.</p>
+      <div style="display:flex;gap:12px;justify-content:center;margin-bottom:24px;flex-wrap:wrap">
+        <button class="secondary" onclick="startQuiz(10)">10 spørgsmål (hurtig)</button>
+        <button class="secondary" onclick="startQuiz(25)">25 spørgsmål</button>
+        <button onclick="startQuiz(50)">Alle 50 spørgsmål</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="quiz-screen" style="display:none">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="question-num" id="q-num"></div>
+    <div class="question" id="q-text"></div>
+    <div class="chapter" id="q-chapter"></div>
+    <div class="options" id="q-options"></div>
+    <div class="feedback" id="feedback"></div>
+    <div style="display:flex;justify-content:space-between;margin-top:20px;align-items:center">
+      <span style="color:var(--muted)">Score: <b id="score">0</b></span>
+      <button id="next-btn" onclick="nextQuestion()" style="display:none">Næste →</button>
+    </div>
+  </div>
+
+  <div class="card" id="end-screen" style="display:none">
+    <div class="end-screen">
+      <h2 style="color:var(--accent2);margin-bottom:16px">Quiz færdig! 🎉</h2>
+      <div class="score-big" id="final-score">0 / 0</div>
+      <div class="score-pct" id="final-pct">0 %</div>
+      <p style="color:var(--muted);margin:24px 0" id="final-msg"></p>
+      <button onclick="location.reload()">Prøv igen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  // Kapitel 1-2: Tal og geometri
+  { q: "Hvor mange decimale tal er 1011 i binær?", opts: ["9", "11", "13", "15"], a: 1, ch: "Kap. 5 — Binær regning" },
+  { q: "Hvad er hexadecimalt for 255?", opts: ["FF", "F0", "EE", "100"], a: 0, ch: "Kap. 5 — Binær regning" },
+  { q: "Hvad er omkredsen af en cirkel med diameter 10?", opts: ["31,4", "10π", "2π · 5", "Alle tre er korrekte"], a: 3, ch: "Kap. 2 — Geometri" },
+  { q: "I en retvinklet trekant er kateterne 3 og 4. Hvad er hypotenusen?", opts: ["5", "7", "12", "25"], a: 0, ch: "Kap. 2-3 — Pythagoras" },
+  { q: "Hvad er sin(45°)?", opts: ["0,5", "0,707", "0,866", "1"], a: 1, ch: "Kap. 3 — Trigonometri" },
+
+  // Kapitel 6: Måleenheder
+  { q: "Hvor mange watt er 2,5 kW?", opts: ["250 W", "2.500 W", "25.000 W", "0,25 W"], a: 1, ch: "Kap. 6 — Måleenheder" },
+  { q: "Hvor mange μF er 0,001 F?", opts: ["1 μF", "100 μF", "1.000 μF", "1.000.000 μF"], a: 2, ch: "Kap. 6 — Måleenheder" },
+  { q: "Hvad er 25°C i kelvin?", opts: ["248,15 K", "298,15 K", "300 K", "25 K"], a: 1, ch: "Kap. 6 — Måleenheder" },
+  { q: "Hvor mange J er 1 kWh?", opts: ["1.000", "3.600", "3.600.000", "60.000"], a: 2, ch: "Kap. 6 — Måleenheder" },
+
+  // Kapitel 7-8
+  { q: "Hvor mange valenselektroner har silicium (Si)?", opts: ["1", "2", "4", "8"], a: 2, ch: "Kap. 7 — Kemi" },
+  { q: "Hvilken gas udgør ca. 78% af luften?", opts: ["Oxygen", "Nitrogen", "Argon", "CO₂"], a: 1, ch: "Kap. 8 — Luftteori" },
+  { q: "Hvad er det atmosfæriske tryk ved havoverfladen?", opts: ["0,5 bar", "1 bar", "2 bar", "10 bar"], a: 1, ch: "Kap. 8 — Luftteori" },
+
+  // Kapitel 9: El-grundbegreber
+  { q: "Hvilken enhed har strøm?", opts: ["Volt", "Watt", "Ampere", "Ohm"], a: 2, ch: "Kap. 9 — El-grundbegreber" },
+  { q: "Hvad er netfrekvensen i Danmark?", opts: ["50 Hz", "60 Hz", "100 Hz", "230 Hz"], a: 0, ch: "Kap. 9 — El-grundbegreber" },
+  { q: "Voltmeter tilsluttes...", opts: ["I serie", "Parallelt", "Begge dele", "Med formodstand"], a: 1, ch: "Kap. 9 — El-grundbegreber" },
+  { q: "Amperemeter tilsluttes...", opts: ["I serie", "Parallelt", "Begge dele", "Med shunt"], a: 0, ch: "Kap. 9 — El-grundbegreber" },
+  { q: "Hvad er et HFI-relæ designet til at udløse ved?", opts: ["10 mA", "30 mA", "100 mA", "1 A"], a: 1, ch: "Kap. 9 — El-grundbegreber" },
+
+  // Kapitel 10: Jævnstrøm
+  { q: "Ohms lov er U = ?", opts: ["I + R", "I × R", "I / R", "R / I"], a: 1, ch: "Kap. 10 — Jævnstrøm" },
+  { q: "Hvor stor strøm går der gennem 100 Ω ved 12 V?", opts: ["1,2 A", "0,12 A", "120 mA", "Både B og C"], a: 3, ch: "Kap. 10 — Jævnstrøm" },
+  { q: "I serie summeres...", opts: ["Strømmene", "Spændinger og modstande", "Effekt", "Frekvenser"], a: 1, ch: "Kap. 10 — Jævnstrøm" },
+  { q: "I parallel er...", opts: ["Strømmen ens", "Spændingen ens", "Modstanden størst", "Effekten 0"], a: 1, ch: "Kap. 10 — Jævnstrøm" },
+  { q: "To 100 Ω modstande parallelt giver...", opts: ["50 Ω", "100 Ω", "200 Ω", "0 Ω"], a: 0, ch: "Kap. 10 — Jævnstrøm" },
+  { q: "Effektformlen P = ?", opts: ["U + I", "U × I", "U / I", "U − I"], a: 1, ch: "Kap. 10 — Jævnstrøm" },
+
+  // Kapitel 11: Magnetisme
+  { q: "Hvor mange feltlinjer går fra N til S uden for en magnet?", opts: ["Få", "Ingen", "Alle", "Halvdelen"], a: 2, ch: "Kap. 11 — Magnetisme" },
+  { q: "Hvilken regel beskriver kraft på leder i magnetfelt?", opts: ["Højrehånd", "Venstrehånd", "Ohms lov", "Kirchhoff"], a: 1, ch: "Kap. 11 — Magnetisme" },
+  { q: "I en transformer med N1=100, N2=200 ved U1=100 V er U2 =?", opts: ["50 V", "100 V", "200 V", "300 V"], a: 2, ch: "Kap. 11 — Transformer" },
+  { q: "Magnetisk flux måles i...", opts: ["Tesla", "Weber", "Henry", "Volt"], a: 1, ch: "Kap. 11 — Magnetisme" },
+
+  // Kapitel 12: 1-faset AC
+  { q: "Peak-spændingen for 230 V RMS er ca.?", opts: ["115 V", "163 V", "325 V", "460 V"], a: 2, ch: "Kap. 12 — AC" },
+  { q: "Hvor lang er en periode ved 50 Hz?", opts: ["20 ms", "50 ms", "10 ms", "100 ms"], a: 0, ch: "Kap. 12 — AC" },
+  { q: "I en spole 'sakker' strømmen spændingen med...", opts: ["0°", "45°", "90°", "180°"], a: 2, ch: "Kap. 12 — AC" },
+  { q: "I en kondensator 'leder' strømmen spændingen med...", opts: ["0°", "45°", "90°", "180°"], a: 2, ch: "Kap. 12 — AC" },
+  { q: "Effektfaktor cos φ = 0 betyder...", opts: ["Ren ohmsk", "Ingen virkeeffekt", "Ingen strøm", "Ingen spænding"], a: 1, ch: "Kap. 12 — AC" },
+  { q: "Reaktansen i en spole er X_L = ?", opts: ["2πfL", "1/(2πfL)", "2πfC", "ωL/C"], a: 0, ch: "Kap. 12 — AC" },
+
+  // Kapitel 13: 3-faset
+  { q: "I Danmark er fasespænding 230 V og netspænding...", opts: ["230 V", "325 V", "400 V", "690 V"], a: 2, ch: "Kap. 13 — 3-fase" },
+  { q: "Faserne er forskudt med...", opts: ["90°", "120°", "180°", "360°"], a: 1, ch: "Kap. 13 — 3-fase" },
+  { q: "Y-til-Δ omskiftning bruges typisk til...", opts: ["Effektreguelering", "Spændingsfald", "Motorstart", "Frekvensskift"], a: 2, ch: "Kap. 13 — 3-fase" },
+  { q: "En 4-polet motor ved 50 Hz har synkronhastighed...", opts: ["750 omdr/min", "1.500 omdr/min", "3.000 omdr/min", "6.000 omdr/min"], a: 1, ch: "Kap. 13 — 3-fase" },
+
+  // Kapitel 14: R og C
+  { q: "Farverne brun-sort-rød-guld er en modstand på...", opts: ["10 Ω", "100 Ω", "1 kΩ", "10 kΩ"], a: 2, ch: "Kap. 14 — Modstande" },
+  { q: "Kondensatorer i serie regnes som...", opts: ["Modstande i serie", "Modstande i parallel", "Sum direkte", "Multipliceret"], a: 1, ch: "Kap. 14 — Kondensatorer" },
+  { q: "Tidskonstanten for RC-led er...", opts: ["R + C", "R × C", "R / C", "1/(R×C)"], a: 1, ch: "Kap. 14 — RC-led" },
+
+  // Kapitel 15: Halvledere
+  { q: "Hvor mange ben har en BJT-transistor?", opts: ["2", "3", "4", "5"], a: 1, ch: "Kap. 15 — Transistor" },
+  { q: "Spændingsfald over en silicium-diode (frem) er ca.?", opts: ["0,3 V", "0,7 V", "1,5 V", "5 V"], a: 1, ch: "Kap. 15 — Diode" },
+  { q: "MOSFET styres af...", opts: ["Strøm", "Spænding (gate)", "Magnetfelt", "Lys"], a: 1, ch: "Kap. 15 — MOSFET" },
+  { q: "En thyristor har... ben.", opts: ["2", "3", "4", "5"], a: 1, ch: "Kap. 15 — Thyristor" },
+
+  // Kapitel 17-19
+  { q: "Hvor mange dioder har en brokoblet ensretter?", opts: ["1", "2", "4", "6"], a: 2, ch: "Kap. 17 — Ensretning" },
+  { q: "Ripple-frekvensen efter en 1-faset bro ved 50 Hz er...", opts: ["25 Hz", "50 Hz", "100 Hz", "200 Hz"], a: 2, ch: "Kap. 17 — Ensretning" },
+  { q: "Til varmeanlæg foretrækkes...", opts: ["Fasestyring", "Nulpunktstyring", "PWM", "Linæer regulering"], a: 1, ch: "Kap. 18 — Effektregulering" },
+  { q: "En astabil multivibrator har... stabile tilstande.", opts: ["0", "1", "2", "Uendelig"], a: 0, ch: "Kap. 19 — Multivibrator" },
+
+  // Kapitel 20: Logik
+  { q: "AND-port giver 1 hvis...", opts: ["Begge inputs er 0", "Mindst ét er 1", "Begge er 1", "De er forskellige"], a: 2, ch: "Kap. 20 — Logik" },
+  { q: "XOR-port giver 1 hvis...", opts: ["Begge er 0", "Begge er 1", "Inputs er ens", "Inputs er forskellige"], a: 3, ch: "Kap. 20 — Logik" },
+  { q: "De Morgans lov: ¬(A·B) = ?", opts: ["¬A · ¬B", "¬A + ¬B", "A + B", "¬(A+B)"], a: 1, ch: "Kap. 20 — Logik" },
+
+  // Kapitel 21-22: Måleteknik
+  { q: "Hvilket signal er industristandard for analog overførsel?", opts: ["0-10 V", "4-20 mA", "0-5 V", "±15 V"], a: 1, ch: "Kap. 22 — Måleteknik" },
+  { q: "PT100 har modstand... Ω ved 0°C.", opts: ["10", "100", "1000", "10000"], a: 1, ch: "Kap. 22 — PT100" },
+  { q: "En 12-bit ADC har... opløsningstrin.", opts: ["12", "256", "1024", "4096"], a: 3, ch: "Kap. 22 — ADC" },
+];
+
+let currentQ = 0;
+let score = 0;
+let activeQuestions = [];
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function startQuiz(n) {
+  activeQuestions = shuffle([...questions]).slice(0, n);
+  currentQ = 0; score = 0;
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('end-screen').style.display = 'none';
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = activeQuestions[currentQ];
+  document.getElementById('progress-fill').style.width = ((currentQ) / activeQuestions.length * 100) + '%';
+  document.getElementById('q-num').textContent = `Spørgsmål ${currentQ+1} af ${activeQuestions.length}`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-chapter').textContent = '📖 ' + q.ch;
+  document.getElementById('score').textContent = score;
+
+  const opts = document.getElementById('q-options');
+  opts.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const b = document.createElement('button');
+    b.className = 'option';
+    b.textContent = opt;
+    b.onclick = () => choose(i);
+    opts.appendChild(b);
+  });
+
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('feedback').innerHTML = '';
+  document.getElementById('next-btn').style.display = 'none';
+}
+
+function choose(i) {
+  const q = activeQuestions[currentQ];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o => { o.classList.add('disabled'); o.onclick = null; });
+  opts[q.a].classList.add('correct');
+  if (i !== q.a) opts[i].classList.add('wrong');
+
+  const fb = document.getElementById('feedback');
+  fb.classList.add('show');
+  if (i === q.a) {
+    score++;
+    fb.classList.add('correct');
+    fb.innerHTML = '✅ Korrekt!';
+  } else {
+    fb.classList.add('wrong');
+    fb.innerHTML = `❌ Forkert. Det rigtige svar er: <b>${q.opts[q.a]}</b>`;
+  }
+  document.getElementById('score').textContent = score;
+  document.getElementById('next-btn').style.display = 'inline-block';
+  document.getElementById('next-btn').textContent = (currentQ+1 === activeQuestions.length) ? 'Se resultat 🎯' : 'Næste →';
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= activeQuestions.length) {
+    showEnd();
+  } else {
+    showQuestion();
+  }
+}
+
+function showEnd() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('end-screen').style.display = 'block';
+  document.getElementById('final-score').textContent = `${score} / ${activeQuestions.length}`;
+  const pct = Math.round(score / activeQuestions.length * 100);
+  document.getElementById('final-pct').textContent = pct + ' %';
+  let msg = '';
+  if (pct >= 90) msg = '🌟 Fremragende! Du har styr på el-teorien.';
+  else if (pct >= 75) msg = '👍 Godt klaret! Lille gentagelse på de svære områder anbefales.';
+  else if (pct >= 50) msg = '📚 OK — gennemgå kapitlerne igen for at konsolidere stoffet.';
+  else msg = '📖 Det er tid til at læse kapitlerne grundigt igennem. Du klarer det!';
+  document.getElementById('final-msg').textContent = msg;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logik-gates | El-Teori Kursus</title>
+<style>
+  :root {
+    --bg: #0f1419; --card: #1a2332; --accent: #ffd700; --accent2: #4dd0e1;
+    --green: #6dd9b3; --red: #ff6b6b; --text: #e0e6ed; --muted: #8da4b8; --border: #2a3f56;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.6; }
+  .container { max-width: 1000px; margin: 0 auto; }
+  h1 { color: var(--accent); font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .subtitle { color: var(--muted); margin-bottom: 2rem; }
+  .ar { color: var(--muted); font-size: 0.85em; direction: rtl; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+  .gates { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .gate { background: var(--bg); border: 2px solid var(--border); border-radius: 12px; padding: 16px; transition: border-color 0.2s; }
+  .gate.active { border-color: var(--green); }
+  .gate-name { color: var(--accent); font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+  .gate-formula { color: var(--muted); font-family: monospace; margin-bottom: 12px; font-size: 0.9em; }
+  .inputs-row { display: flex; gap: 12px; align-items: center; margin: 12px 0; }
+  .toggle { width: 50px; height: 26px; background: var(--card); border: 1px solid var(--border); border-radius: 13px;
+            cursor: pointer; position: relative; transition: all 0.2s; flex-shrink: 0; }
+  .toggle.on { background: var(--green); border-color: var(--green); }
+  .toggle::after { content: ''; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px;
+                   background: var(--text); border-radius: 50%; transition: left 0.2s; }
+  .toggle.on::after { left: 27px; background: var(--bg); }
+  .lbl { font-weight: 600; color: var(--accent2); width: 24px; }
+  .output { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--card);
+            border-radius: 8px; margin-top: 12px; }
+  .output-bulb { width: 32px; height: 32px; border-radius: 50%; background: #2a3f56;
+                 transition: background 0.2s; box-shadow: 0 0 0 2px var(--border); }
+  .output-bulb.on { background: var(--accent); box-shadow: 0 0 16px var(--accent), 0 0 0 2px var(--accent); }
+  .output-val { font-family: monospace; font-size: 1.4rem; font-weight: 700; }
+  .output-val.high { color: var(--green); }
+  .output-val.low { color: var(--red); }
+  .truth-table { width: 100%; margin-top: 12px; font-family: monospace; font-size: 0.9em; border-collapse: collapse; }
+  .truth-table td, .truth-table th { padding: 4px 8px; text-align: center; border-bottom: 1px solid var(--border); }
+  .truth-table th { color: var(--accent2); }
+  .truth-table tr.current { background: rgba(109,217,179,0.1); }
+  .back-link { display: inline-block; color: var(--accent2); text-decoration: none; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="../README.md" class="back-link">← Tilbage til oversigt</a>
+
+  <h1>🧠 Logik-gate simulator</h1>
+  <p class="subtitle">Klik på toggle-knapperne for at ændre input. Output opdateres straks.<br><span class="ar">محاكي البوابات المنطقية — انقر للتغيير</span></p>
+
+  <div class="card">
+    <h3 style="color:var(--accent2);margin-bottom:8px">Globale indgange</h3>
+    <div class="inputs-row">
+      <span class="lbl">A</span>
+      <button class="toggle" id="A" onclick="toggle('A')"></button>
+      <span class="lbl">B</span>
+      <button class="toggle" id="B" onclick="toggle('B')"></button>
+    </div>
+    <p style="color:var(--muted);font-size:0.9em">Indgange deles på alle porte nedenfor.</p>
+  </div>
+
+  <div class="gates">
+    <!-- Genereres dynamisk -->
+  </div>
+</div>
+
+<script>
+  let A = false, B = false;
+
+  const gates = [
+    { name: 'AND', formula: 'Y = A · B', fn: (a,b) => a && b },
+    { name: 'OR', formula: 'Y = A + B', fn: (a,b) => a || b },
+    { name: 'NOT (A)', formula: 'Y = ¬A', fn: (a,b) => !a, single: true },
+    { name: 'NAND', formula: 'Y = ¬(A · B)', fn: (a,b) => !(a && b) },
+    { name: 'NOR', formula: 'Y = ¬(A + B)', fn: (a,b) => !(a || b) },
+    { name: 'XOR', formula: 'Y = A ⊕ B', fn: (a,b) => a !== b },
+    { name: 'XNOR', formula: 'Y = ¬(A ⊕ B)', fn: (a,b) => a === b },
+  ];
+
+  function toggle(id) {
+    if (id === 'A') A = !A;
+    else if (id === 'B') B = !B;
+    document.getElementById('A').classList.toggle('on', A);
+    document.getElementById('B').classList.toggle('on', B);
+    render();
+  }
+
+  function render() {
+    const container = document.querySelector('.gates');
+    container.innerHTML = '';
+    gates.forEach(g => {
+      const result = g.fn(A, B);
+      const div = document.createElement('div');
+      div.className = 'gate' + (result ? ' active' : '');
+      let truthRows = '';
+      const cases = g.single ? [[false],[true]] : [[false,false],[false,true],[true,false],[true,true]];
+      cases.forEach(c => {
+        const cur = g.single ? (c[0] === A) : (c[0] === A && c[1] === B);
+        const out = g.single ? g.fn(c[0]) : g.fn(c[0], c[1]);
+        truthRows += `<tr class="${cur?'current':''}"><td>${c[0]?'1':'0'}</td>${g.single?'':`<td>${c[1]?'1':'0'}</td>`}<td>${out?'1':'0'}</td></tr>`;
+      });
+      div.innerHTML = `
+        <div class="gate-name">${g.name}</div>
+        <div class="gate-formula">${g.formula}</div>
+        <div class="output">
+          <div class="output-bulb ${result?'on':''}"></div>
+          <div class="output-val ${result?'high':'low'}">Y = ${result?'1':'0'}</div>
+        </div>
+        <table class="truth-table">
+          <tr><th>A</th>${g.single?'':'<th>B</th>'}<th>Y</th></tr>
+          ${truthRows}
+        </table>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  render();
+</script>
+</body>
+</html>

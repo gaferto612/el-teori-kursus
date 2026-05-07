@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vekselstrøm visualizer | El-Teori Kursus</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --card: #1a2332;
+    --accent: #ffd700;
+    --accent2: #4dd0e1;
+    --green: #6dd9b3;
+    --red: #ff6b6b;
+    --text: #e0e6ed;
+    --muted: #8da4b8;
+    --border: #2a3f56;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    line-height: 1.6;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1 { color: var(--accent); font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .subtitle { color: var(--muted); margin-bottom: 2rem; }
+  .ar { color: var(--muted); font-size: 0.85em; direction: rtl; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+  .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  label { font-weight: 600; color: var(--accent2); display:block; margin-bottom: 6px; }
+  input[type="range"] { width: 100%; }
+  input[type="number"] {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px; width: 100%;
+  }
+  canvas { width: 100%; height: 350px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border); display: block; }
+  .results { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 20px; }
+  .stat { background: var(--bg); padding: 12px; border-radius: 8px; border-left: 3px solid var(--accent); }
+  .stat-label { color: var(--muted); font-size: 0.85em; margin-bottom: 4px; }
+  .stat-value { color: var(--accent); font-family: "Courier New", monospace; font-size: 1.3em; font-weight: 600; }
+  .stat.rms { border-color: var(--green); }
+  .stat.rms .stat-value { color: var(--green); }
+  .stat.peak { border-color: var(--red); }
+  .stat.peak .stat-value { color: var(--red); }
+  .back-link { display: inline-block; color: var(--accent2); text-decoration: none; margin-bottom: 20px; }
+  .legend { display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.9em; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="../README.md" class="back-link">← Tilbage til oversigt</a>
+
+  <h1>🌊 Vekselstrøm visualizer</h1>
+  <p class="subtitle">Sinuskurve med peak, RMS, middel og frekvens<br><span class="ar">عرض موجة التيار المتردد مع القيمة الفعالة والقصوى والتردد</span></p>
+
+  <div class="card">
+    <div class="controls">
+      <div>
+        <label>Peak-spænding U_peak (V)</label>
+        <input type="range" id="peakInput" min="10" max="500" value="325" oninput="updatePeak(this.value)">
+        <input type="number" id="peakNum" value="325" min="1" max="1000" oninput="updatePeak(this.value)">
+      </div>
+      <div>
+        <label>Frekvens f (Hz)</label>
+        <input type="range" id="freqInput" min="1" max="200" value="50" oninput="updateFreq(this.value)">
+        <input type="number" id="freqNum" value="50" min="1" max="1000" oninput="updateFreq(this.value)">
+      </div>
+      <div>
+        <label>Visning</label>
+        <select id="display" onchange="draw()" style="width:100%;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px">
+          <option value="all">Alle linjer</option>
+          <option value="sine">Kun sinuskurve</option>
+        </select>
+      </div>
+    </div>
+
+    <canvas id="canvas" width="900" height="350"></canvas>
+
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:var(--accent2)"></span>Sinusspænding u(t)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--red)"></span>Peak (top)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>RMS (effektivværdi)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--accent)"></span>Middel (halv periode)</div>
+    </div>
+
+    <div class="results">
+      <div class="stat peak">
+        <div class="stat-label">Peak (U<sub>peak</sub> / Û)</div>
+        <div class="stat-value" id="v-peak">325 V</div>
+      </div>
+      <div class="stat peak">
+        <div class="stat-label">Peak-to-peak (U<sub>pp</sub>)</div>
+        <div class="stat-value" id="v-pp">650 V</div>
+      </div>
+      <div class="stat rms">
+        <div class="stat-label">RMS (effektivværdi)</div>
+        <div class="stat-value" id="v-rms">230 V</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Middel (halv periode)</div>
+        <div class="stat-value" id="v-mid">207 V</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Periodetid T</div>
+        <div class="stat-value" id="v-T">20 ms</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Vinkelhastighed ω</div>
+        <div class="stat-value" id="v-w">314 rad/s</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="color:var(--accent2);margin-bottom:12px">📚 Formler</h3>
+    <ul style="list-style:none;line-height:2">
+      <li>• <code>u(t) = U<sub>peak</sub> · sin(ωt)</code></li>
+      <li>• <code>U<sub>RMS</sub> = U<sub>peak</sub> / √2 ≈ 0,707 · U<sub>peak</sub></code></li>
+      <li>• <code>U<sub>middel</sub> = 2 · U<sub>peak</sub> / π ≈ 0,637 · U<sub>peak</sub></code> (halv periode)</li>
+      <li>• <code>T = 1 / f</code> &nbsp;&nbsp; <code>ω = 2πf</code></li>
+    </ul>
+    <p style="margin-top:12px;color:var(--muted)">
+      💡 Standard <b>230 V</b> netspænding er en RMS-værdi. Peak-værdien er faktisk <b>325 V</b>.
+    </p>
+  </div>
+</div>
+
+<script>
+  let peak = 325, freq = 50;
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+
+  function updatePeak(v) {
+    peak = parseFloat(v) || 1;
+    document.getElementById('peakInput').value = peak;
+    document.getElementById('peakNum').value = peak;
+    update();
+  }
+  function updateFreq(v) {
+    freq = parseFloat(v) || 1;
+    document.getElementById('freqInput').value = freq;
+    document.getElementById('freqNum').value = freq;
+    update();
+  }
+
+  function update() {
+    const rms = peak / Math.sqrt(2);
+    const mid = 2 * peak / Math.PI;
+    const T = 1000 / freq;  // ms
+    const omega = 2 * Math.PI * freq;
+
+    document.getElementById('v-peak').textContent = peak.toFixed(1) + ' V';
+    document.getElementById('v-pp').textContent = (peak * 2).toFixed(1) + ' V';
+    document.getElementById('v-rms').textContent = rms.toFixed(1) + ' V';
+    document.getElementById('v-mid').textContent = mid.toFixed(1) + ' V';
+    document.getElementById('v-T').textContent = T < 10 ? T.toFixed(2) + ' ms' : T.toFixed(1) + ' ms';
+    document.getElementById('v-w').textContent = omega.toFixed(0) + ' rad/s';
+
+    draw();
+  }
+
+  function draw() {
+    const w = canvas.width = canvas.offsetWidth;
+    const h = canvas.height = 350;
+    ctx.clearRect(0, 0, w, h);
+
+    const cx = h / 2;  // center y
+    const margin = 40;
+    const plotW = w - 2*margin;
+    const periods = 2;
+    const scale = (h/2 - 30) / peak;
+
+    // Grid
+    ctx.strokeStyle = '#2a3f56';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= periods * 4; i++) {
+      const x = margin + (i / (periods*4)) * plotW;
+      ctx.beginPath(); ctx.moveTo(x, 20); ctx.lineTo(x, h-20); ctx.stroke();
+    }
+    for (let i = -2; i <= 2; i++) {
+      const y = cx - i * (h/2 - 30) / 2;
+      ctx.beginPath(); ctx.moveTo(margin, y); ctx.lineTo(w-margin, y); ctx.stroke();
+    }
+
+    // Akser
+    ctx.strokeStyle = '#8da4b8';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(margin, cx); ctx.lineTo(w-margin, cx);
+    ctx.moveTo(margin, 20); ctx.lineTo(margin, h-20);
+    ctx.stroke();
+
+    ctx.fillStyle = '#8da4b8';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('t', w-margin+4, cx+4);
+    ctx.fillText('u(t)', margin-30, 28);
+    ctx.fillText('0', margin-15, cx+4);
+    ctx.fillText('+' + peak.toFixed(0), margin-32, 22);
+    ctx.fillText('-' + peak.toFixed(0), margin-32, h-12);
+
+    const display = document.getElementById('display').value;
+
+    // Peak-linjer (rød)
+    if (display === 'all') {
+      ctx.strokeStyle = '#ff6b6b';
+      ctx.lineWidth = 1; ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.moveTo(margin, cx - peak * scale);
+      ctx.lineTo(w-margin, cx - peak * scale);
+      ctx.moveTo(margin, cx + peak * scale);
+      ctx.lineTo(w-margin, cx + peak * scale);
+      ctx.stroke();
+
+      // RMS-linjer (grøn)
+      const rms = peak / Math.sqrt(2);
+      ctx.strokeStyle = '#6dd9b3';
+      ctx.beginPath();
+      ctx.moveTo(margin, cx - rms * scale);
+      ctx.lineTo(w-margin, cx - rms * scale);
+      ctx.moveTo(margin, cx + rms * scale);
+      ctx.lineTo(w-margin, cx + rms * scale);
+      ctx.stroke();
+
+      // Middelværdi (gul)
+      const mid = 2 * peak / Math.PI;
+      ctx.strokeStyle = '#ffd700';
+      ctx.beginPath();
+      ctx.moveTo(margin, cx - mid * scale);
+      ctx.lineTo(w-margin, cx - mid * scale);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Labels
+      ctx.fillStyle = '#ff6b6b';
+      ctx.fillText('Peak: ' + peak.toFixed(0) + ' V', w-margin-90, cx - peak * scale - 6);
+      ctx.fillStyle = '#6dd9b3';
+      ctx.fillText('RMS: ' + (peak/Math.sqrt(2)).toFixed(0) + ' V', w-margin-90, cx - rms * scale - 6);
+      ctx.fillStyle = '#ffd700';
+      ctx.fillText('Middel: ' + (2*peak/Math.PI).toFixed(0) + ' V', w-margin-110, cx - mid * scale - 6);
+    }
+    ctx.setLineDash([]);
+
+    // Sinuskurven
+    ctx.strokeStyle = '#4dd0e1';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let i = 0; i <= plotW; i++) {
+      const x = margin + i;
+      const t = (i / plotW) * periods;  // antal perioder
+      const y = cx - peak * Math.sin(2 * Math.PI * t) * scale;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Periode-markering
+    ctx.fillStyle = '#8da4b8';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('1 periode (T = ' + (1000/freq).toFixed(1) + ' ms)', margin + plotW/4 - 50, h - 4);
+  }
+
+  window.addEventListener('resize', draw);
+  update();
+</script>
+</body>
+</html>
