@@ -1,4 +1,4 @@
-<div dir="rtl" lang="ar">
+<div dir="rtl" lang="ar" markdown="1">
 
 # الفصل 11 — المغناطيسية
 
