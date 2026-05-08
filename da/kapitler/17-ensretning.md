@@ -200,7 +200,7 @@ Zenerdioden holder konstant spænding ved sin **gennembrudsspænding** $U_Z$.
 
 > 💡 OK til små belastninger og simple kredse. Spilder energi i seriemodstanden.
 
-### Linæer regulator (IC)
+### Lineær regulator (IC)
 
 | Type | Spænding |
 |------|----------|

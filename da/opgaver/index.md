@@ -47,6 +47,6 @@ Hver opgave har en collapsible løsning:
 
 Når du har gennemarbejdet flere kapitler, så tag den **interaktive quiz**:
 
-- 📝 [Quiz med 50 spørgsmål](../../interaktiv/quiz.html)
+- 📝 [Quiz med 54 spørgsmål](../../interaktiv/quiz.html)
 
 ⬅ [Tilbage til oversigt](../)

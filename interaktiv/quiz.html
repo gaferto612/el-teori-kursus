@@ -10,11 +10,16 @@
     --green: #6dd9b3; --red: #ff6b6b; --text: #e0e6ed; --muted: #8da4b8; --border: #2a3f56;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.6; }
+  body { font-family: -apple-system, "Segoe UI", "Noto Naskh Arabic", sans-serif; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.6; }
+  html[dir="rtl"] body { font-family: "Noto Naskh Arabic", "Segoe UI", -apple-system, sans-serif; }
   .container { max-width: 800px; margin: 0 auto; }
   h1 { color: var(--accent); font-size: 1.8rem; margin-bottom: 0.5rem; }
-  .subtitle { color: var(--muted); margin-bottom: 2rem; }
-  .ar { color: var(--muted); font-size: 0.85em; direction: rtl; }
+  .subtitle { color: var(--muted); margin-bottom: 1.5rem; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+  .lang-switcher { display: flex; gap: 4px; }
+  .lang-switcher button { background: var(--card); color: var(--text); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-family: inherit; margin: 0; }
+  .lang-switcher button.active { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 700; }
+  .lang-switcher button:hover:not(.active) { border-color: var(--accent2); }
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
   .progress-bar { background: var(--bg); border-radius: 8px; height: 12px; overflow: hidden; margin-bottom: 16px; }
   .progress-fill { background: var(--accent); height: 100%; transition: width 0.3s; }
@@ -23,7 +28,7 @@
   .chapter { color: var(--accent2); font-size: 0.85em; margin-bottom: 16px; }
   .options { display: flex; flex-direction: column; gap: 10px; }
   .option { background: var(--bg); border: 2px solid var(--border); padding: 12px 16px; border-radius: 8px;
-            cursor: pointer; text-align: left; color: var(--text); font-size: 1em; transition: all 0.15s; }
+            cursor: pointer; text-align: start; color: var(--text); font-size: 1em; transition: all 0.15s; font-family: inherit; }
   .option:hover:not(.disabled) { border-color: var(--accent2); }
   .option.correct { background: rgba(109,217,179,0.15); border-color: var(--green); color: var(--green); }
   .option.wrong { background: rgba(255,107,107,0.15); border-color: var(--red); color: var(--red); }
@@ -32,32 +37,45 @@
   .feedback.show { display: block; }
   .feedback.correct { background: rgba(109,217,179,0.1); border-left: 3px solid var(--green); }
   .feedback.wrong { background: rgba(255,107,107,0.1); border-left: 3px solid var(--red); }
-  button { background: var(--accent); color: var(--bg); border: none; padding: 12px 24px;
-           border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 1em; margin-top: 16px; }
-  button:hover { opacity: 0.85; }
-  button:disabled { opacity: 0.4; cursor: not-allowed; }
-  button.secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+  html[dir="rtl"] .feedback.correct, html[dir="rtl"] .feedback.wrong { border-left: none; border-right: 3px solid; }
+  html[dir="rtl"] .feedback.correct { border-right-color: var(--green); }
+  html[dir="rtl"] .feedback.wrong { border-right-color: var(--red); }
+  button.cta { background: var(--accent); color: var(--bg); border: none; padding: 12px 24px;
+           border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 1em; margin-top: 16px; font-family: inherit; }
+  button.cta:hover { opacity: 0.85; }
+  button.cta:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); padding: 12px 24px;
+           border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 1em; font-family: inherit; }
+  button.secondary:hover { border-color: var(--accent2); }
   .start-screen, .end-screen { text-align: center; padding: 40px 20px; }
   .score-big { font-size: 3rem; color: var(--accent); font-weight: 700; }
   .score-pct { font-size: 1.5rem; color: var(--accent2); }
-  .back-link { display: inline-block; color: var(--accent2); text-decoration: none; margin-bottom: 20px; }
+  .back-link { display: inline-block; color: var(--accent2); text-decoration: none; }
+  .back-link:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
 <div class="container">
-  <a href="../README.md" class="back-link">← Tilbage til oversigt</a>
+  <div class="topbar">
+    <a href="../" class="back-link" data-i18n="back">← Tilbage til oversigt</a>
+    <div class="lang-switcher" role="group" aria-label="Language">
+      <button data-lang="da" class="active">🇩🇰 DA</button>
+      <button data-lang="en">🇬🇧 EN</button>
+      <button data-lang="ar">🇸🇦 AR</button>
+    </div>
+  </div>
 
-  <h1>📝 Quiz — El-Teori</h1>
-  <p class="subtitle">50 spørgsmål blandet på tværs af alle kapitler<br><span class="ar">اختبار شامل في 50 سؤال</span></p>
+  <h1 data-i18n="title">📝 Quiz — El-Teori</h1>
+  <p class="subtitle" data-i18n="subtitle">Spørgsmål blandet på tværs af alle 22 kapitler</p>
 
   <div class="card" id="start-screen">
     <div class="start-screen">
-      <h2 style="color:var(--accent2);margin-bottom:16px">Klar til at teste din viden?</h2>
-      <p style="color:var(--muted);margin-bottom:24px">Quizzen indeholder spørgsmål fra alle 22 kapitler.<br>Vælg antal spørgsmål nedenfor.</p>
+      <h2 style="color:var(--accent2);margin-bottom:16px" data-i18n="ready">Klar til at teste din viden?</h2>
+      <p style="color:var(--muted);margin-bottom:24px" data-i18n="readyDesc">Quizzen indeholder spørgsmål fra alle 22 kapitler.<br>Vælg antal spørgsmål nedenfor.</p>
       <div style="display:flex;gap:12px;justify-content:center;margin-bottom:24px;flex-wrap:wrap">
-        <button class="secondary" onclick="startQuiz(10)">10 spørgsmål (hurtig)</button>
-        <button class="secondary" onclick="startQuiz(25)">25 spørgsmål</button>
-        <button onclick="startQuiz(50)">Alle 50 spørgsmål</button>
+        <button class="secondary" onclick="startQuiz(10)" data-i18n="btn10">10 spørgsmål (hurtig)</button>
+        <button class="secondary" onclick="startQuiz(25)" data-i18n="btn25">25 spørgsmål</button>
+        <button class="cta" onclick="startQuiz(54)" data-i18n="btnAll">Alle 54 spørgsmål</button>
       </div>
     </div>
   </div>
@@ -70,108 +88,354 @@
     <div class="options" id="q-options"></div>
     <div class="feedback" id="feedback"></div>
     <div style="display:flex;justify-content:space-between;margin-top:20px;align-items:center">
-      <span style="color:var(--muted)">Score: <b id="score">0</b></span>
-      <button id="next-btn" onclick="nextQuestion()" style="display:none">Næste →</button>
+      <span style="color:var(--muted)"><span data-i18n="scoreLabel">Score:</span> <b id="score">0</b></span>
+      <button class="cta" id="next-btn" onclick="nextQuestion()" style="display:none">Næste →</button>
     </div>
   </div>
 
   <div class="card" id="end-screen" style="display:none">
     <div class="end-screen">
-      <h2 style="color:var(--accent2);margin-bottom:16px">Quiz færdig! 🎉</h2>
+      <h2 style="color:var(--accent2);margin-bottom:16px" data-i18n="done">Quiz færdig! 🎉</h2>
       <div class="score-big" id="final-score">0 / 0</div>
       <div class="score-pct" id="final-pct">0 %</div>
       <p style="color:var(--muted);margin:24px 0" id="final-msg"></p>
-      <button onclick="location.reload()">Prøv igen</button>
+      <button class="cta" onclick="location.reload()" data-i18n="retry">Prøv igen</button>
     </div>
   </div>
 </div>
 
 <script>
-const questions = [
-  // Kapitel 1-2: Tal og geometri
-  { q: "Hvor mange decimale tal er 1011 i binær?", opts: ["9", "11", "13", "15"], a: 1, ch: "Kap. 5 — Binær regning" },
-  { q: "Hvad er hexadecimalt for 255?", opts: ["FF", "F0", "EE", "100"], a: 0, ch: "Kap. 5 — Binær regning" },
-  { q: "Hvad er omkredsen af en cirkel med diameter 10?", opts: ["31,4", "10π", "2π · 5", "Alle tre er korrekte"], a: 3, ch: "Kap. 2 — Geometri" },
-  { q: "I en retvinklet trekant er kateterne 3 og 4. Hvad er hypotenusen?", opts: ["5", "7", "12", "25"], a: 0, ch: "Kap. 2-3 — Pythagoras" },
-  { q: "Hvad er sin(45°)?", opts: ["0,5", "0,707", "0,866", "1"], a: 1, ch: "Kap. 3 — Trigonometri" },
+const UI = {
+  da: {
+    back: "← Tilbage til oversigt",
+    title: "📝 Quiz — El-Teori",
+    subtitle: "Spørgsmål blandet på tværs af alle 22 kapitler",
+    ready: "Klar til at teste din viden?",
+    readyDesc: "Quizzen indeholder spørgsmål fra alle 22 kapitler.<br>Vælg antal spørgsmål nedenfor.",
+    btn10: "10 spørgsmål (hurtig)", btn25: "25 spørgsmål", btnAll: "Alle 54 spørgsmål",
+    scoreLabel: "Score:", done: "Quiz færdig! 🎉", retry: "Prøv igen",
+    qOf: (i, n) => `Spørgsmål ${i} af ${n}`,
+    next: "Næste →", showResult: "Se resultat 🎯",
+    correct: "✅ Korrekt!",
+    wrong: (a) => `❌ Forkert. Det rigtige svar er: <b>${a}</b>`,
+    msg90: "🌟 Fremragende! Du har styr på el-teorien.",
+    msg75: "👍 Godt klaret! Lille gentagelse på de svære områder anbefales.",
+    msg50: "📚 OK — gennemgå kapitlerne igen for at konsolidere stoffet.",
+    msg0: "📖 Det er tid til at læse kapitlerne grundigt igennem. Du klarer det!"
+  },
+  en: {
+    back: "← Back to overview",
+    title: "📝 Quiz — Electrical Theory",
+    subtitle: "Questions mixed across all 22 chapters",
+    ready: "Ready to test your knowledge?",
+    readyDesc: "The quiz contains questions from all 22 chapters.<br>Choose how many you want.",
+    btn10: "10 questions (quick)", btn25: "25 questions", btnAll: "All 54 questions",
+    scoreLabel: "Score:", done: "Quiz finished! 🎉", retry: "Try again",
+    qOf: (i, n) => `Question ${i} of ${n}`,
+    next: "Next →", showResult: "See result 🎯",
+    correct: "✅ Correct!",
+    wrong: (a) => `❌ Wrong. The correct answer is: <b>${a}</b>`,
+    msg90: "🌟 Excellent! You have a solid grasp of the theory.",
+    msg75: "👍 Well done! A short revision on the harder topics is recommended.",
+    msg50: "📚 OK — go through the chapters again to consolidate.",
+    msg0: "📖 Time to read the chapters carefully. You've got this!"
+  },
+  ar: {
+    back: "→ العودة إلى القائمة",
+    title: "📝 اختبار — النظرية الكهربائية",
+    subtitle: "أسئلة مختلطة من جميع الفصول الـ 22",
+    ready: "هل أنت جاهز لاختبار معلوماتك؟",
+    readyDesc: "يحتوي الاختبار على أسئلة من جميع الفصول الـ 22.<br>اختر عدد الأسئلة أدناه.",
+    btn10: "10 أسئلة (سريع)", btn25: "25 سؤالاً", btnAll: "جميع الأسئلة الـ 54",
+    scoreLabel: "النتيجة:", done: "انتهى الاختبار! 🎉", retry: "حاول مرة أخرى",
+    qOf: (i, n) => `السؤال ${i} من ${n}`,
+    next: "التالي →", showResult: "إظهار النتيجة 🎯",
+    correct: "✅ إجابة صحيحة!",
+    wrong: (a) => `❌ إجابة خاطئة. الإجابة الصحيحة هي: <b>${a}</b>`,
+    msg90: "🌟 ممتاز! إتقانك للنظرية واضح.",
+    msg75: "👍 أحسنت! يُنصح بمراجعة قصيرة للنقاط الصعبة.",
+    msg50: "📚 لا بأس — راجع الفصول مرة أخرى لترسيخ المفاهيم.",
+    msg0: "📖 حان وقت قراءة الفصول بتأنٍّ. أنت قادر على ذلك!"
+  }
+};
 
-  // Kapitel 6: Måleenheder
-  { q: "Hvor mange watt er 2,5 kW?", opts: ["250 W", "2.500 W", "25.000 W", "0,25 W"], a: 1, ch: "Kap. 6 — Måleenheder" },
-  { q: "Hvor mange μF er 0,001 F?", opts: ["1 μF", "100 μF", "1.000 μF", "1.000.000 μF"], a: 2, ch: "Kap. 6 — Måleenheder" },
-  { q: "Hvad er 25°C i kelvin?", opts: ["248,15 K", "298,15 K", "300 K", "25 K"], a: 1, ch: "Kap. 6 — Måleenheder" },
-  { q: "Hvor mange J er 1 kWh?", opts: ["1.000", "3.600", "3.600.000", "60.000"], a: 2, ch: "Kap. 6 — Måleenheder" },
+// Helper to translate per-question text
+const tr = (obj, lang) => (obj && typeof obj === 'object' && obj[lang] !== undefined) ? obj[lang] : obj;
 
-  // Kapitel 7-8
-  { q: "Hvor mange valenselektroner har silicium (Si)?", opts: ["1", "2", "4", "8"], a: 2, ch: "Kap. 7 — Kemi" },
-  { q: "Hvilken gas udgør ca. 78% af luften?", opts: ["Oxygen", "Nitrogen", "Argon", "CO₂"], a: 1, ch: "Kap. 8 — Luftteori" },
-  { q: "Hvad er det atmosfæriske tryk ved havoverfladen?", opts: ["0,5 bar", "1 bar", "2 bar", "10 bar"], a: 1, ch: "Kap. 8 — Luftteori" },
+// Chapter labels reused across questions
+const CH = {
+  bin: { da: "Kap. 5 — Binær regning", en: "Ch. 5 — Binary arithmetic", ar: "ف. 5 — الحساب الثنائي" },
+  geo: { da: "Kap. 2 — Geometri", en: "Ch. 2 — Geometry", ar: "ف. 2 — الهندسة" },
+  pyt: { da: "Kap. 2-3 — Pythagoras", en: "Ch. 2-3 — Pythagoras", ar: "ف. 2-3 — فيثاغورس" },
+  tri: { da: "Kap. 3 — Trigonometri", en: "Ch. 3 — Trigonometry", ar: "ف. 3 — علم المثلثات" },
+  unt: { da: "Kap. 6 — Måleenheder", en: "Ch. 6 — Units", ar: "ف. 6 — وحدات القياس" },
+  che: { da: "Kap. 7 — Kemi", en: "Ch. 7 — Chemistry", ar: "ف. 7 — الكيمياء" },
+  air: { da: "Kap. 8 — Luftteori", en: "Ch. 8 — Air theory", ar: "ف. 8 — نظرية الهواء" },
+  ele: { da: "Kap. 9 — El-grundbegreber", en: "Ch. 9 — Electrical fundamentals", ar: "ف. 9 — المفاهيم الكهربائية" },
+  dc:  { da: "Kap. 10 — Jævnstrøm", en: "Ch. 10 — DC theory", ar: "ف. 10 — التيار المستمر" },
+  mag: { da: "Kap. 11 — Magnetisme", en: "Ch. 11 — Magnetism", ar: "ف. 11 — المغناطيسية" },
+  trf: { da: "Kap. 11 — Transformer", en: "Ch. 11 — Transformer", ar: "ف. 11 — المحوّل" },
+  ac:  { da: "Kap. 12 — AC", en: "Ch. 12 — AC", ar: "ف. 12 — التيار المتردد" },
+  ph3: { da: "Kap. 13 — 3-fase", en: "Ch. 13 — 3-phase", ar: "ف. 13 — ثلاثي الطور" },
+  res: { da: "Kap. 14 — Modstande", en: "Ch. 14 — Resistors", ar: "ف. 14 — المقاومات" },
+  cap: { da: "Kap. 14 — Kondensatorer", en: "Ch. 14 — Capacitors", ar: "ف. 14 — المكثفات" },
+  rcc: { da: "Kap. 14 — RC-led", en: "Ch. 14 — RC circuit", ar: "ف. 14 — دائرة RC" },
+  trn: { da: "Kap. 15 — Transistor", en: "Ch. 15 — Transistor", ar: "ف. 15 — الترانزستور" },
+  dio: { da: "Kap. 15 — Diode", en: "Ch. 15 — Diode", ar: "ف. 15 — الديود" },
+  mos: { da: "Kap. 15 — MOSFET", en: "Ch. 15 — MOSFET", ar: "ف. 15 — MOSFET" },
+  thy: { da: "Kap. 15 — Thyristor", en: "Ch. 15 — Thyristor", ar: "ف. 15 — الثايرستور" },
+  rec: { da: "Kap. 17 — Ensretning", en: "Ch. 17 — Rectification", ar: "ف. 17 — التقويم" },
+  pwr: { da: "Kap. 18 — Effektregulering", en: "Ch. 18 — Power regulation", ar: "ف. 18 — تنظيم القدرة" },
+  mvb: { da: "Kap. 19 — Multivibrator", en: "Ch. 19 — Multivibrator", ar: "ف. 19 — المتذبذب" },
+  log: { da: "Kap. 20 — Logik", en: "Ch. 20 — Logic", ar: "ف. 20 — المنطق" },
+  meas: { da: "Kap. 22 — Måleteknik", en: "Ch. 22 — Measurement", ar: "ف. 22 — تقنية القياس" },
+  pt100: { da: "Kap. 22 — PT100", en: "Ch. 22 — PT100", ar: "ف. 22 — PT100" },
+  adc: { da: "Kap. 22 — ADC", en: "Ch. 22 — ADC", ar: "ف. 22 — ADC" }
+};
 
-  // Kapitel 9: El-grundbegreber
-  { q: "Hvilken enhed har strøm?", opts: ["Volt", "Watt", "Ampere", "Ohm"], a: 2, ch: "Kap. 9 — El-grundbegreber" },
-  { q: "Hvad er netfrekvensen i Danmark?", opts: ["50 Hz", "60 Hz", "100 Hz", "230 Hz"], a: 0, ch: "Kap. 9 — El-grundbegreber" },
-  { q: "Voltmeter tilsluttes...", opts: ["I serie", "Parallelt", "Begge dele", "Med formodstand"], a: 1, ch: "Kap. 9 — El-grundbegreber" },
-  { q: "Amperemeter tilsluttes...", opts: ["I serie", "Parallelt", "Begge dele", "Med shunt"], a: 0, ch: "Kap. 9 — El-grundbegreber" },
-  { q: "Hvad er et HFI-relæ designet til at udløse ved?", opts: ["10 mA", "30 mA", "100 mA", "1 A"], a: 1, ch: "Kap. 9 — El-grundbegreber" },
+const QUESTIONS = [
+  // Numbers, geometry, trig
+  { q: { da: "Hvilket decimaltal svarer det binære tal 1011 til?", en: "Which decimal number does the binary 1011 represent?", ar: "ما هو الرقم العشري المقابل للعدد الثنائي 1011؟" },
+    opts: ["9", "11", "13", "15"], a: 1, ch: CH.bin },
+  { q: { da: "Hvad er 255 skrevet i hexadecimal?", en: "What is 255 in hexadecimal?", ar: "ما هو 255 بالنظام السادس عشر؟" },
+    opts: ["FF", "F0", "EE", "100"], a: 0, ch: CH.bin },
+  { q: { da: "Hvad er omkredsen af en cirkel med diameter 10?", en: "What is the circumference of a circle with diameter 10?", ar: "ما هو محيط دائرة قطرها 10؟" },
+    opts: [
+      "31,4 / 31.4",
+      "10π",
+      "2π · 5",
+      { da: "Alle tre er korrekte", en: "All three are correct", ar: "جميع الثلاثة صحيحة" }
+    ], a: 3, ch: CH.geo },
+  { q: { da: "I en retvinklet trekant er kateterne 3 og 4. Hvad er hypotenusen?", en: "In a right triangle the legs are 3 and 4. What is the hypotenuse?", ar: "في مثلث قائم الزاوية، الضلعان القائمان 3 و4. ما طول الوتر؟" },
+    opts: ["5", "7", "12", "25"], a: 0, ch: CH.pyt },
+  { q: { da: "Hvad er sin(45°)?", en: "What is sin(45°)?", ar: "ما قيمة sin(45°)؟" },
+    opts: ["0,5 / 0.5", "0,707 / 0.707", "0,866 / 0.866", "1"], a: 1, ch: CH.tri },
 
-  // Kapitel 10: Jævnstrøm
-  { q: "Ohms lov er U = ?", opts: ["I + R", "I × R", "I / R", "R / I"], a: 1, ch: "Kap. 10 — Jævnstrøm" },
-  { q: "Hvor stor strøm går der gennem 100 Ω ved 12 V?", opts: ["1,2 A", "0,12 A", "120 mA", "Både B og C"], a: 3, ch: "Kap. 10 — Jævnstrøm" },
-  { q: "I serie summeres...", opts: ["Strømmene", "Spændinger og modstande", "Effekt", "Frekvenser"], a: 1, ch: "Kap. 10 — Jævnstrøm" },
-  { q: "I parallel er...", opts: ["Strømmen ens", "Spændingen ens", "Modstanden størst", "Effekten 0"], a: 1, ch: "Kap. 10 — Jævnstrøm" },
-  { q: "To 100 Ω modstande parallelt giver...", opts: ["50 Ω", "100 Ω", "200 Ω", "0 Ω"], a: 0, ch: "Kap. 10 — Jævnstrøm" },
-  { q: "Effektformlen P = ?", opts: ["U + I", "U × I", "U / I", "U − I"], a: 1, ch: "Kap. 10 — Jævnstrøm" },
+  // Units
+  { q: { da: "Hvor mange watt er 2,5 kW?", en: "How many watts is 2.5 kW?", ar: "كم واط في 2.5 kW؟" },
+    opts: ["250 W", "2 500 W", "25 000 W", "0,25 W / 0.25 W"], a: 1, ch: CH.unt },
+  { q: { da: "Hvor mange μF er 0,001 F?", en: "How many μF is 0.001 F?", ar: "كم μF في 0.001 F؟" },
+    opts: ["1 μF", "100 μF", "1 000 μF", "1 000 000 μF"], a: 2, ch: CH.unt },
+  { q: { da: "Hvad er 25 °C i kelvin?", en: "What is 25 °C in kelvin?", ar: "كم تساوي 25 °C بالكلفن؟" },
+    opts: ["248,15 K", "298,15 K", "300 K", "25 K"], a: 1, ch: CH.unt },
+  { q: { da: "Hvor mange J er 1 kWh?", en: "How many J is 1 kWh?", ar: "كم جول في 1 kWh؟" },
+    opts: ["1 000", "3 600", "3 600 000", "60 000"], a: 2, ch: CH.unt },
 
-  // Kapitel 11: Magnetisme
-  { q: "Hvor mange feltlinjer går fra N til S uden for en magnet?", opts: ["Få", "Ingen", "Alle", "Halvdelen"], a: 2, ch: "Kap. 11 — Magnetisme" },
-  { q: "Hvilken regel beskriver kraft på leder i magnetfelt?", opts: ["Højrehånd", "Venstrehånd", "Ohms lov", "Kirchhoff"], a: 1, ch: "Kap. 11 — Magnetisme" },
-  { q: "I en transformer med N1=100, N2=200 ved U1=100 V er U2 =?", opts: ["50 V", "100 V", "200 V", "300 V"], a: 2, ch: "Kap. 11 — Transformer" },
-  { q: "Magnetisk flux måles i...", opts: ["Tesla", "Weber", "Henry", "Volt"], a: 1, ch: "Kap. 11 — Magnetisme" },
+  // Chemistry / air
+  { q: { da: "Hvor mange valenselektroner har silicium (Si)?", en: "How many valence electrons does silicon (Si) have?", ar: "كم إلكترون تكافؤ يملك السيليكون (Si)؟" },
+    opts: ["1", "2", "4", "8"], a: 2, ch: CH.che },
+  { q: { da: "Hvilken gas udgør ca. 78 % af luften?", en: "Which gas makes up about 78% of air?", ar: "أي غاز يشكّل حوالي 78٪ من الهواء؟" },
+    opts: [
+      { da: "Oxygen", en: "Oxygen", ar: "الأكسجين" },
+      { da: "Nitrogen", en: "Nitrogen", ar: "النيتروجين" },
+      { da: "Argon", en: "Argon", ar: "الأرجون" },
+      "CO₂"
+    ], a: 1, ch: CH.air },
+  { q: { da: "Hvad er det atmosfæriske tryk ved havoverfladen?", en: "What is atmospheric pressure at sea level?", ar: "ما الضغط الجوي عند مستوى سطح البحر؟" },
+    opts: ["0,5 bar / 0.5 bar", "1 bar", "2 bar", "10 bar"], a: 1, ch: CH.air },
 
-  // Kapitel 12: 1-faset AC
-  { q: "Peak-spændingen for 230 V RMS er ca.?", opts: ["115 V", "163 V", "325 V", "460 V"], a: 2, ch: "Kap. 12 — AC" },
-  { q: "Hvor lang er en periode ved 50 Hz?", opts: ["20 ms", "50 ms", "10 ms", "100 ms"], a: 0, ch: "Kap. 12 — AC" },
-  { q: "I en spole 'sakker' strømmen spændingen med...", opts: ["0°", "45°", "90°", "180°"], a: 2, ch: "Kap. 12 — AC" },
-  { q: "I en kondensator 'leder' strømmen spændingen med...", opts: ["0°", "45°", "90°", "180°"], a: 2, ch: "Kap. 12 — AC" },
-  { q: "Effektfaktor cos φ = 0 betyder...", opts: ["Ren ohmsk", "Ingen virkeeffekt", "Ingen strøm", "Ingen spænding"], a: 1, ch: "Kap. 12 — AC" },
-  { q: "Reaktansen i en spole er X_L = ?", opts: ["2πfL", "1/(2πfL)", "2πfC", "ωL/C"], a: 0, ch: "Kap. 12 — AC" },
+  // Electrical fundamentals
+  { q: { da: "Hvilken enhed har strøm?", en: "What is the SI unit of current?", ar: "ما هي وحدة التيار؟" },
+    opts: ["Volt", "Watt", "Ampere", "Ohm"], a: 2, ch: CH.ele },
+  { q: { da: "Hvad er netfrekvensen i Danmark?", en: "What is the mains frequency in Denmark?", ar: "ما تردد الشبكة في الدنمارك؟" },
+    opts: ["50 Hz", "60 Hz", "100 Hz", "230 Hz"], a: 0, ch: CH.ele },
+  { q: { da: "Voltmeter tilsluttes…", en: "A voltmeter is connected…", ar: "يُوصَل الفولتميتر…" },
+    opts: [
+      { da: "I serie", en: "In series", ar: "على التوالي" },
+      { da: "Parallelt", en: "In parallel", ar: "على التوازي" },
+      { da: "Begge dele", en: "Both ways", ar: "بالطريقتين" },
+      { da: "Med formodstand", en: "With multiplier resistor", ar: "مع مقاومة مُضاعِفة" }
+    ], a: 1, ch: CH.ele },
+  { q: { da: "Amperemeter tilsluttes…", en: "An ammeter is connected…", ar: "يُوصَل الأمبيرميتر…" },
+    opts: [
+      { da: "I serie", en: "In series", ar: "على التوالي" },
+      { da: "Parallelt", en: "In parallel", ar: "على التوازي" },
+      { da: "Begge dele", en: "Both ways", ar: "بالطريقتين" },
+      { da: "Med shunt", en: "With shunt", ar: "مع مقاومة شَنت" }
+    ], a: 0, ch: CH.ele },
+  { q: { da: "Hvad er et HFI/HPFI-relæ designet til at udløse ved?", en: "What residual current does an RCD (HFI/HPFI) typically trip at?", ar: "ما تيار الخطأ الذي يفصل عنده قاطع التسرّب الأرضي عادةً؟" },
+    opts: ["10 mA", "30 mA", "100 mA", "1 A"], a: 1, ch: CH.ele },
 
-  // Kapitel 13: 3-faset
-  { q: "I Danmark er fasespænding 230 V og netspænding...", opts: ["230 V", "325 V", "400 V", "690 V"], a: 2, ch: "Kap. 13 — 3-fase" },
-  { q: "Faserne er forskudt med...", opts: ["90°", "120°", "180°", "360°"], a: 1, ch: "Kap. 13 — 3-fase" },
-  { q: "Y-til-Δ omskiftning bruges typisk til...", opts: ["Effektreguelering", "Spændingsfald", "Motorstart", "Frekvensskift"], a: 2, ch: "Kap. 13 — 3-fase" },
-  { q: "En 4-polet motor ved 50 Hz har synkronhastighed...", opts: ["750 omdr/min", "1.500 omdr/min", "3.000 omdr/min", "6.000 omdr/min"], a: 1, ch: "Kap. 13 — 3-fase" },
+  // DC theory
+  { q: { da: "Ohms lov er U = ?", en: "Ohm's law: U = ?", ar: "قانون أوم: U = ؟" },
+    opts: ["I + R", "I × R", "I / R", "R / I"], a: 1, ch: CH.dc },
+  { q: { da: "Hvor stor strøm går der gennem 100 Ω ved 12 V?", en: "How much current flows through 100 Ω at 12 V?", ar: "كم تيار يمرّ في 100 Ω عند 12 V؟" },
+    opts: ["1,2 A / 1.2 A", "0,12 A / 0.12 A", "120 mA",
+      { da: "Både B og C", en: "Both B and C", ar: "كل من B و C" }
+    ], a: 3, ch: CH.dc },
+  { q: { da: "I serie summeres…", en: "In a series circuit, what adds up?", ar: "في التوصيل على التوالي، ما الذي يُجمَع؟" },
+    opts: [
+      { da: "Strømmene", en: "The currents", ar: "التيارات" },
+      { da: "Spændinger og modstande", en: "Voltages and resistances", ar: "الجهود والمقاومات" },
+      { da: "Effekt", en: "Power", ar: "القدرة" },
+      { da: "Frekvenser", en: "Frequencies", ar: "الترددات" }
+    ], a: 1, ch: CH.dc },
+  { q: { da: "I parallel er…", en: "In a parallel circuit…", ar: "في التوصيل على التوازي…" },
+    opts: [
+      { da: "Strømmen ens", en: "Current is the same", ar: "التيار ثابت" },
+      { da: "Spændingen ens", en: "Voltage is the same", ar: "الجهد ثابت" },
+      { da: "Modstanden størst", en: "Resistance is largest", ar: "المقاومة أكبر" },
+      { da: "Effekten 0", en: "Power is 0", ar: "القدرة صفر" }
+    ], a: 1, ch: CH.dc },
+  { q: { da: "To 100 Ω modstande parallelt giver…", en: "Two 100 Ω resistors in parallel give…", ar: "مقاومتان 100 Ω على التوازي تعطيان…" },
+    opts: ["50 Ω", "100 Ω", "200 Ω", "0 Ω"], a: 0, ch: CH.dc },
+  { q: { da: "Effektformlen P = ?", en: "Power formula: P = ?", ar: "صيغة القدرة: P = ؟" },
+    opts: ["U + I", "U × I", "U / I", "U − I"], a: 1, ch: CH.dc },
 
-  // Kapitel 14: R og C
-  { q: "Farverne brun-sort-rød-guld er en modstand på...", opts: ["10 Ω", "100 Ω", "1 kΩ", "10 kΩ"], a: 2, ch: "Kap. 14 — Modstande" },
-  { q: "Kondensatorer i serie regnes som...", opts: ["Modstande i serie", "Modstande i parallel", "Sum direkte", "Multipliceret"], a: 1, ch: "Kap. 14 — Kondensatorer" },
-  { q: "Tidskonstanten for RC-led er...", opts: ["R + C", "R × C", "R / C", "1/(R×C)"], a: 1, ch: "Kap. 14 — RC-led" },
+  // Magnetism
+  { q: { da: "Hvor går magnetiske feltlinjer uden for en magnet?", en: "Outside a magnet, the magnetic field lines run…", ar: "خارج المغناطيس، تسير خطوط المجال…" },
+    opts: [
+      { da: "Tilfældigt", en: "Randomly", ar: "عشوائياً" },
+      { da: "Slet ikke (ingen)", en: "Not at all", ar: "لا توجد" },
+      { da: "Fra N til S", en: "From N to S", ar: "من N إلى S" },
+      { da: "Fra S til N", en: "From S to N", ar: "من S إلى N" }
+    ], a: 2, ch: CH.mag },
+  { q: { da: "Hvilken regel beskriver kraftens retning på en strømførende leder i et magnetfelt?", en: "Which rule gives the force direction on a current-carrying conductor in a magnetic field?", ar: "أي قاعدة تُعطي اتجاه القوة على موصل يحمل تياراً في مجال مغناطيسي؟" },
+    opts: [
+      { da: "Højrehåndsreglen", en: "Right-hand rule", ar: "قاعدة اليد اليمنى" },
+      { da: "Venstrehåndsreglen", en: "Left-hand rule (Fleming)", ar: "قاعدة اليد اليسرى (فلمنغ)" },
+      { da: "Ohms lov", en: "Ohm's law", ar: "قانون أوم" },
+      { da: "Kirchhoffs lov", en: "Kirchhoff's law", ar: "قانون كيرشوف" }
+    ], a: 1, ch: CH.mag },
+  { q: { da: "I en transformer med N₁=100, N₂=200 og U₁=100 V er U₂ = ?", en: "In a transformer with N₁=100, N₂=200 and U₁=100 V, U₂ = ?", ar: "في محوّل N₁=100 و N₂=200 و U₁=100 V، فإن U₂ = ؟" },
+    opts: ["50 V", "100 V", "200 V", "300 V"], a: 2, ch: CH.trf },
+  { q: { da: "Magnetisk flux måles i…", en: "Magnetic flux is measured in…", ar: "يُقاس التدفق المغناطيسي بـ…" },
+    opts: ["Tesla", "Weber", "Henry", "Volt"], a: 1, ch: CH.mag },
 
-  // Kapitel 15: Halvledere
-  { q: "Hvor mange ben har en BJT-transistor?", opts: ["2", "3", "4", "5"], a: 1, ch: "Kap. 15 — Transistor" },
-  { q: "Spændingsfald over en silicium-diode (frem) er ca.?", opts: ["0,3 V", "0,7 V", "1,5 V", "5 V"], a: 1, ch: "Kap. 15 — Diode" },
-  { q: "MOSFET styres af...", opts: ["Strøm", "Spænding (gate)", "Magnetfelt", "Lys"], a: 1, ch: "Kap. 15 — MOSFET" },
-  { q: "En thyristor har... ben.", opts: ["2", "3", "4", "5"], a: 1, ch: "Kap. 15 — Thyristor" },
+  // 1-phase AC
+  { q: { da: "Peak-spændingen for 230 V RMS er ca.?", en: "The peak voltage for 230 V RMS is approximately?", ar: "القيمة القصوى لجهد 230 V RMS تساوي تقريباً؟" },
+    opts: ["115 V", "163 V", "325 V", "460 V"], a: 2, ch: CH.ac },
+  { q: { da: "Hvor lang er én periode ved 50 Hz?", en: "How long is one period at 50 Hz?", ar: "كم زمن دورة واحدة عند 50 Hz؟" },
+    opts: ["20 ms", "50 ms", "10 ms", "100 ms"], a: 0, ch: CH.ac },
+  { q: { da: "I en spole 'sakker' strømmen efter spændingen med…", en: "In an inductor, the current lags the voltage by…", ar: "في الملف، يتأخّر التيار عن الجهد بـ…" },
+    opts: ["0°", "45°", "90°", "180°"], a: 2, ch: CH.ac },
+  { q: { da: "I en kondensator 'leder' strømmen spændingen med…", en: "In a capacitor, the current leads the voltage by…", ar: "في المكثف، يتقدّم التيار على الجهد بـ…" },
+    opts: ["0°", "45°", "90°", "180°"], a: 2, ch: CH.ac },
+  { q: { da: "Effektfaktor cos φ = 0 betyder…", en: "Power factor cos φ = 0 means…", ar: "معامل القدرة cos φ = 0 يعني…" },
+    opts: [
+      { da: "Ren ohmsk last", en: "Purely resistive load", ar: "حمل مقاوم بحت" },
+      { da: "Ingen virkeeffekt", en: "No real (active) power", ar: "لا توجد قدرة فعّالة" },
+      { da: "Ingen strøm", en: "No current", ar: "لا تيار" },
+      { da: "Ingen spænding", en: "No voltage", ar: "لا جهد" }
+    ], a: 1, ch: CH.ac },
+  { q: { da: "Reaktansen i en spole er X_L = ?", en: "Inductive reactance: X_L = ?", ar: "الممانعة الحثّية: X_L = ؟" },
+    opts: ["2πfL", "1/(2πfL)", "2πfC", "ωL/C"], a: 0, ch: CH.ac },
 
-  // Kapitel 17-19
-  { q: "Hvor mange dioder har en brokoblet ensretter?", opts: ["1", "2", "4", "6"], a: 2, ch: "Kap. 17 — Ensretning" },
-  { q: "Ripple-frekvensen efter en 1-faset bro ved 50 Hz er...", opts: ["25 Hz", "50 Hz", "100 Hz", "200 Hz"], a: 2, ch: "Kap. 17 — Ensretning" },
-  { q: "Til varmeanlæg foretrækkes...", opts: ["Fasestyring", "Nulpunktstyring", "PWM", "Linæer regulering"], a: 1, ch: "Kap. 18 — Effektregulering" },
-  { q: "En astabil multivibrator har... stabile tilstande.", opts: ["0", "1", "2", "Uendelig"], a: 0, ch: "Kap. 19 — Multivibrator" },
+  // 3-phase
+  { q: { da: "I Danmark er fasespænding 230 V og netspænding…", en: "In Denmark phase voltage is 230 V and line-to-line voltage is…", ar: "في الدنمارك جهد الطور 230 V وجهد الخط…" },
+    opts: ["230 V", "325 V", "400 V", "690 V"], a: 2, ch: CH.ph3 },
+  { q: { da: "Faserne er forskudt med…", en: "The phases are offset by…", ar: "تتأخر الأطوار عن بعضها بـ…" },
+    opts: ["90°", "120°", "180°", "360°"], a: 1, ch: CH.ph3 },
+  { q: { da: "Y-til-Δ omskiftning bruges typisk til…", en: "Y-to-Δ switching is typically used for…", ar: "يُستخدم تبديل النجمة إلى المثلث عادةً لـ…" },
+    opts: [
+      { da: "Effektregulering", en: "Power regulation", ar: "تنظيم القدرة" },
+      { da: "Spændingsfald", en: "Voltage drop", ar: "هبوط الجهد" },
+      { da: "Motorstart", en: "Motor starting", ar: "بدء تشغيل المحرك" },
+      { da: "Frekvensskift", en: "Frequency change", ar: "تغيير التردد" }
+    ], a: 2, ch: CH.ph3 },
+  { q: { da: "En 4-polet motor ved 50 Hz har synkron-omdrejningstal…", en: "A 4-pole motor at 50 Hz has a synchronous speed of…", ar: "محرّك 4 أقطاب عند 50 Hz سرعته التزامنية…" },
+    opts: ["750 omdr/min / rpm", "1 500 omdr/min / rpm", "3 000 omdr/min / rpm", "6 000 omdr/min / rpm"], a: 1, ch: CH.ph3 },
 
-  // Kapitel 20: Logik
-  { q: "AND-port giver 1 hvis...", opts: ["Begge inputs er 0", "Mindst ét er 1", "Begge er 1", "De er forskellige"], a: 2, ch: "Kap. 20 — Logik" },
-  { q: "XOR-port giver 1 hvis...", opts: ["Begge er 0", "Begge er 1", "Inputs er ens", "Inputs er forskellige"], a: 3, ch: "Kap. 20 — Logik" },
-  { q: "De Morgans lov: ¬(A·B) = ?", opts: ["¬A · ¬B", "¬A + ¬B", "A + B", "¬(A+B)"], a: 1, ch: "Kap. 20 — Logik" },
+  // Resistors / capacitors
+  { q: { da: "Farvekoden brun-sort-rød-guld svarer til en modstand på…", en: "The colour code brown-black-red-gold corresponds to…", ar: "رمز الألوان بُنّي-أسود-أحمر-ذهبي يقابل مقاومة قدرها…" },
+    opts: ["10 Ω", "100 Ω", "1 kΩ", "10 kΩ"], a: 2, ch: CH.res },
+  { q: { da: "Kondensatorer i serie regnes som…", en: "Capacitors in series are computed like…", ar: "تُحسب المكثفات على التوالي مثل…" },
+    opts: [
+      { da: "Modstande i serie", en: "Resistors in series", ar: "مقاومات على التوالي" },
+      { da: "Modstande i parallel", en: "Resistors in parallel", ar: "مقاومات على التوازي" },
+      { da: "Sum direkte", en: "Direct sum", ar: "جمع مباشر" },
+      { da: "Multipliceret", en: "Multiplied", ar: "ضرب" }
+    ], a: 1, ch: CH.cap },
+  { q: { da: "Tidskonstanten τ for et RC-led er…", en: "The time constant τ of an RC circuit is…", ar: "ثابت الزمن τ لدائرة RC هو…" },
+    opts: ["R + C", "R × C", "R / C", "1 / (R × C)"], a: 1, ch: CH.rcc },
 
-  // Kapitel 21-22: Måleteknik
-  { q: "Hvilket signal er industristandard for analog overførsel?", opts: ["0-10 V", "4-20 mA", "0-5 V", "±15 V"], a: 1, ch: "Kap. 22 — Måleteknik" },
-  { q: "PT100 har modstand... Ω ved 0°C.", opts: ["10", "100", "1000", "10000"], a: 1, ch: "Kap. 22 — PT100" },
-  { q: "En 12-bit ADC har... opløsningstrin.", opts: ["12", "256", "1024", "4096"], a: 3, ch: "Kap. 22 — ADC" },
+  // Semiconductors
+  { q: { da: "Hvor mange ben har en BJT-transistor?", en: "How many leads does a BJT transistor have?", ar: "كم طرفاً لترانزستور BJT؟" },
+    opts: ["2", "3", "4", "5"], a: 1, ch: CH.trn },
+  { q: { da: "Spændingsfaldet over en silicium-diode i fremretning er ca.?", en: "The forward voltage drop across a silicon diode is approximately?", ar: "هبوط الجهد الأمامي عبر ديود سيليكون يساوي تقريباً؟" },
+    opts: ["0,3 V / 0.3 V", "0,7 V / 0.7 V", "1,5 V / 1.5 V", "5 V"], a: 1, ch: CH.dio },
+  { q: { da: "MOSFET styres af…", en: "A MOSFET is controlled by…", ar: "يتحكّم في الـ MOSFET…" },
+    opts: [
+      { da: "Strøm", en: "Current", ar: "التيار" },
+      { da: "Spænding (gate)", en: "Voltage (gate)", ar: "الجهد (البوّابة)" },
+      { da: "Magnetfelt", en: "Magnetic field", ar: "المجال المغناطيسي" },
+      { da: "Lys", en: "Light", ar: "الضوء" }
+    ], a: 1, ch: CH.mos },
+  { q: { da: "En thyristor (SCR) har … ben.", en: "A thyristor (SCR) has … leads.", ar: "للثايرستور (SCR) … أطراف." },
+    opts: ["2", "3", "4", "5"], a: 1, ch: CH.thy },
+
+  // Rectification, power, multivibrator
+  { q: { da: "Hvor mange dioder har en brokoblet ensretter?", en: "How many diodes does a bridge rectifier have?", ar: "كم ديوداً في مقوّم القنطرة؟" },
+    opts: ["1", "2", "4", "6"], a: 2, ch: CH.rec },
+  { q: { da: "Ripple-frekvensen efter en 1-faset brokobling ved 50 Hz er…", en: "The ripple frequency after a single-phase bridge at 50 Hz is…", ar: "تردد التموّج بعد قنطرة أحادية الطور عند 50 Hz هو…" },
+    opts: ["25 Hz", "50 Hz", "100 Hz", "200 Hz"], a: 2, ch: CH.rec },
+  { q: { da: "Til varmeanlæg foretrækkes…", en: "For heating systems the preferred control is…", ar: "لأنظمة التدفئة، يُفضّل التحكّم…" },
+    opts: [
+      { da: "Fasestyring", en: "Phase control", ar: "بالتحكّم في زاوية الطور" },
+      { da: "Nulpunktstyring", en: "Zero-crossing (burst) control", ar: "بالتبديل عند الصفر" },
+      { da: "PWM", en: "PWM", ar: "PWM" },
+      { da: "Lineær regulering", en: "Linear regulation", ar: "خطّي" }
+    ], a: 1, ch: CH.pwr },
+  { q: { da: "En astabil multivibrator har … stabile tilstande.", en: "An astable multivibrator has … stable states.", ar: "للمتذبذب اللامستقر … حالة مستقرة." },
+    opts: ["0", "1", "2",
+      { da: "Uendelig", en: "Infinite", ar: "ما لا نهاية" }
+    ], a: 0, ch: CH.mvb },
+
+  // Logic
+  { q: { da: "AND-port giver 1 hvis…", en: "AND gate outputs 1 when…", ar: "بوابة AND تعطي 1 عندما…" },
+    opts: [
+      { da: "Begge inputs er 0", en: "Both inputs are 0", ar: "كلا المدخلين 0" },
+      { da: "Mindst ét er 1", en: "At least one is 1", ar: "أحدهما على الأقل 1" },
+      { da: "Begge er 1", en: "Both are 1", ar: "كلاهما 1" },
+      { da: "De er forskellige", en: "They differ", ar: "متعاكسان" }
+    ], a: 2, ch: CH.log },
+  { q: { da: "XOR-port giver 1 hvis…", en: "XOR gate outputs 1 when…", ar: "بوابة XOR تعطي 1 عندما…" },
+    opts: [
+      { da: "Begge er 0", en: "Both are 0", ar: "كلاهما 0" },
+      { da: "Begge er 1", en: "Both are 1", ar: "كلاهما 1" },
+      { da: "Inputs er ens", en: "Inputs are equal", ar: "المدخلان متساويان" },
+      { da: "Inputs er forskellige", en: "Inputs differ", ar: "المدخلان مختلفان" }
+    ], a: 3, ch: CH.log },
+  { q: { da: "De Morgans lov: ¬(A·B) = ?", en: "De Morgan's law: ¬(A·B) = ?", ar: "قانون دي مورغان: ¬(A·B) = ؟" },
+    opts: ["¬A · ¬B", "¬A + ¬B", "A + B", "¬(A + B)"], a: 1, ch: CH.log },
+
+  // Measurement
+  { q: { da: "Hvilket signal er industristandard for analog overførsel?", en: "Which signal is the industry standard for analogue transmission?", ar: "أي إشارة هي المعيار الصناعي للنقل التماثلي؟" },
+    opts: ["0–10 V", "4–20 mA", "0–5 V", "±15 V"], a: 1, ch: CH.meas },
+  { q: { da: "PT100 har en modstand på … Ω ved 0 °C.", en: "A PT100 has a resistance of … Ω at 0 °C.", ar: "PT100 له مقاومة … Ω عند 0 °C." },
+    opts: ["10", "100", "1 000", "10 000"], a: 1, ch: CH.pt100 },
+  { q: { da: "En 12-bit ADC har … opløsningstrin.", en: "A 12-bit ADC has … resolution steps.", ar: "محوّل تماثلي-رقمي 12 بت له … مستوى دقّة." },
+    opts: ["12", "256", "1 024", "4 096"], a: 3, ch: CH.adc }
 ];
 
+let currentLang = 'da';
 let currentQ = 0;
 let score = 0;
 let activeQuestions = [];
+
+function applyLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+  const dict = UI[lang] || UI.da;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key] !== undefined) el.innerHTML = dict[key];
+  });
+  document.querySelectorAll('.lang-switcher button').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  try { localStorage.setItem('elteori-lang', lang); } catch (e) {}
+  // Re-render current question if quiz is active
+  if (document.getElementById('quiz-screen').style.display !== 'none' && activeQuestions.length) {
+    showQuestion();
+  }
+}
+document.querySelectorAll('.lang-switcher button').forEach(b => {
+  b.addEventListener('click', () => applyLang(b.dataset.lang));
+});
+let savedLang = 'da';
+try { savedLang = localStorage.getItem('elteori-lang') || 'da'; } catch (e) {}
 
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -182,7 +446,7 @@ function shuffle(arr) {
 }
 
 function startQuiz(n) {
-  activeQuestions = shuffle([...questions]).slice(0, n);
+  activeQuestions = shuffle([...QUESTIONS]).slice(0, n);
   currentQ = 0; score = 0;
   document.getElementById('start-screen').style.display = 'none';
   document.getElementById('quiz-screen').style.display = 'block';
@@ -192,10 +456,11 @@ function startQuiz(n) {
 
 function showQuestion() {
   const q = activeQuestions[currentQ];
+  const dict = UI[currentLang] || UI.da;
   document.getElementById('progress-fill').style.width = ((currentQ) / activeQuestions.length * 100) + '%';
-  document.getElementById('q-num').textContent = `Spørgsmål ${currentQ+1} af ${activeQuestions.length}`;
-  document.getElementById('q-text').textContent = q.q;
-  document.getElementById('q-chapter').textContent = '📖 ' + q.ch;
+  document.getElementById('q-num').textContent = dict.qOf(currentQ + 1, activeQuestions.length);
+  document.getElementById('q-text').textContent = tr(q.q, currentLang);
+  document.getElementById('q-chapter').textContent = '📖 ' + tr(q.ch, currentLang);
   document.getElementById('score').textContent = score;
 
   const opts = document.getElementById('q-options');
@@ -203,7 +468,7 @@ function showQuestion() {
   q.opts.forEach((opt, i) => {
     const b = document.createElement('button');
     b.className = 'option';
-    b.textContent = opt;
+    b.textContent = tr(opt, currentLang);
     b.onclick = () => choose(i);
     opts.appendChild(b);
   });
@@ -215,6 +480,7 @@ function showQuestion() {
 
 function choose(i) {
   const q = activeQuestions[currentQ];
+  const dict = UI[currentLang] || UI.da;
   const opts = document.querySelectorAll('.option');
   opts.forEach(o => { o.classList.add('disabled'); o.onclick = null; });
   opts[q.a].classList.add('correct');
@@ -225,14 +491,15 @@ function choose(i) {
   if (i === q.a) {
     score++;
     fb.classList.add('correct');
-    fb.innerHTML = '✅ Korrekt!';
+    fb.innerHTML = dict.correct;
   } else {
     fb.classList.add('wrong');
-    fb.innerHTML = `❌ Forkert. Det rigtige svar er: <b>${q.opts[q.a]}</b>`;
+    fb.innerHTML = dict.wrong(tr(q.opts[q.a], currentLang));
   }
   document.getElementById('score').textContent = score;
-  document.getElementById('next-btn').style.display = 'inline-block';
-  document.getElementById('next-btn').textContent = (currentQ+1 === activeQuestions.length) ? 'Se resultat 🎯' : 'Næste →';
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.style.display = 'inline-block';
+  nextBtn.textContent = (currentQ + 1 === activeQuestions.length) ? dict.showResult : dict.next;
 }
 
 function nextQuestion() {
@@ -245,18 +512,21 @@ function nextQuestion() {
 }
 
 function showEnd() {
+  const dict = UI[currentLang] || UI.da;
   document.getElementById('quiz-screen').style.display = 'none';
   document.getElementById('end-screen').style.display = 'block';
   document.getElementById('final-score').textContent = `${score} / ${activeQuestions.length}`;
   const pct = Math.round(score / activeQuestions.length * 100);
   document.getElementById('final-pct').textContent = pct + ' %';
   let msg = '';
-  if (pct >= 90) msg = '🌟 Fremragende! Du har styr på el-teorien.';
-  else if (pct >= 75) msg = '👍 Godt klaret! Lille gentagelse på de svære områder anbefales.';
-  else if (pct >= 50) msg = '📚 OK — gennemgå kapitlerne igen for at konsolidere stoffet.';
-  else msg = '📖 Det er tid til at læse kapitlerne grundigt igennem. Du klarer det!';
+  if (pct >= 90) msg = dict.msg90;
+  else if (pct >= 75) msg = dict.msg75;
+  else if (pct >= 50) msg = dict.msg50;
+  else msg = dict.msg0;
   document.getElementById('final-msg').textContent = msg;
 }
+
+applyLang(savedLang);
 </script>
 </body>
 </html>

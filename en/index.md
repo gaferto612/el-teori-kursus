@@ -74,7 +74,7 @@ The material consists of **summaries + exercises + interactive tools**.
 
 ## 🧮 Interactive tools
 
-Open them directly in the browser — no installation required. Each tool has a built-in language switcher.
+Open them directly in the browser — no installation required. Each tool has a built-in language switcher (🇩🇰 DA / 🇬🇧 EN / 🇸🇦 AR) in the top-right corner.
 
 | Tool | What it does |
 |---|---|
@@ -83,7 +83,7 @@ Open them directly in the browser — no installation required. Each tool has a 
 | 🌊 [AC visualizer](../interaktiv/vekselstroem.html) | Sine curve with RMS, peak value and frequency |
 | 🔢 [Number-system converter](../interaktiv/talsystem-konverter.html) | Decimal ↔ binary ↔ hex ↔ octal |
 | 🧠 [Logic-gate simulator](../interaktiv/logik-gates.html) | AND, OR, NOT, NAND, NOR, XOR |
-| 📝 [Quiz module](../interaktiv/quiz.html) | 50 mixed questions across all chapters |
+| 📝 [Quiz module](../interaktiv/quiz.html) | 54 mixed questions across all chapters |
 
 ---
 

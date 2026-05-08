@@ -74,7 +74,7 @@ Materialet består af **resuméer + opgaver + interaktive øvelser**.
 
 ## 🧮 Interaktive værktøjer
 
-Åbn dem direkte i browseren — ingen installation nødvendig. Værktøjerne har indbygget sprogvælger.
+Åbn dem direkte i browseren — ingen installation nødvendig. Hvert værktøj har en indbygget sprogvælger (🇩🇰 DA / 🇬🇧 EN / 🇸🇦 AR) i øverste højre hjørne.
 
 | Værktøj | Hvad kan du? |
 |---|---|
@@ -83,7 +83,7 @@ Materialet består af **resuméer + opgaver + interaktive øvelser**.
 | 🌊 [Vekselstrøm visualizer](../interaktiv/vekselstroem.html) | Sinuskurve med RMS, peak-værdi og frekvens |
 | 🔢 [Talsystem-konverter](../interaktiv/talsystem-konverter.html) | Decimal ↔ binær ↔ hex ↔ oktal |
 | 🧠 [Logik-gate simulator](../interaktiv/logik-gates.html) | AND, OR, NOT, NAND, NOR, XOR |
-| 📝 [Quiz-modul](../interaktiv/quiz.html) | 50 spørgsmål blandet på tværs af kapitler |
+| 📝 [Quiz-modul](../interaktiv/quiz.html) | 54 spørgsmål blandet på tværs af kapitler |
 
 ---
 
