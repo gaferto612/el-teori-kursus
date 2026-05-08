@@ -17,64 +17,73 @@
     --border: #2a3f56;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    padding: 20px;
-    line-height: 1.6;
-  }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Naskh Arabic", sans-serif; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.6; }
+  html[dir="rtl"] body { font-family: "Noto Naskh Arabic", "Segoe UI", -apple-system, sans-serif; }
   .container { max-width: 900px; margin: 0 auto; }
   h1 { color: var(--accent); font-size: 1.8rem; margin-bottom: 0.5rem; }
-  .subtitle { color: var(--muted); margin-bottom: 2rem; }
-  .ar { color: var(--muted); font-size: 0.85em; direction: rtl; }
+  .subtitle { color: var(--muted); margin-bottom: 1.5rem; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+  .lang-switcher { display: flex; gap: 4px; }
+  .lang-switcher button { background: var(--card); color: var(--text); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-family: inherit; margin: 0; }
+  .lang-switcher button.active { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 700; }
+  .lang-switcher button:hover:not(.active) { border-color: var(--accent2); }
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
   .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
   label { font-weight: 600; color: var(--accent2); display:block; margin-bottom: 6px; }
   input[type="range"] { width: 100%; }
-  input[type="number"] {
+  input[type="number"], select {
     background: var(--bg); color: var(--text); border: 1px solid var(--border);
-    border-radius: 8px; padding: 8px; width: 100%;
+    border-radius: 8px; padding: 8px; width: 100%; font-family: inherit;
   }
   canvas { width: 100%; height: 350px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border); display: block; }
   .results { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 20px; }
   .stat { background: var(--bg); padding: 12px; border-radius: 8px; border-left: 3px solid var(--accent); }
+  html[dir="rtl"] .stat { border-left: none; border-right: 3px solid var(--accent); }
   .stat-label { color: var(--muted); font-size: 0.85em; margin-bottom: 4px; }
-  .stat-value { color: var(--accent); font-family: "Courier New", monospace; font-size: 1.3em; font-weight: 600; }
+  .stat-value { color: var(--accent); font-family: "Courier New", monospace; font-size: 1.3em; font-weight: 600; direction: ltr; }
   .stat.rms { border-color: var(--green); }
   .stat.rms .stat-value { color: var(--green); }
   .stat.peak { border-color: var(--red); }
   .stat.peak .stat-value { color: var(--red); }
-  .back-link { display: inline-block; color: var(--accent2); text-decoration: none; margin-bottom: 20px; }
+  .back-link { display: inline-block; color: var(--accent2); text-decoration: none; }
+  .back-link:hover { text-decoration: underline; }
   .legend { display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
   .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.9em; }
   .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+  code { direction: ltr; display: inline-block; }
 </style>
 </head>
 <body>
 <div class="container">
-  <a href="../README.md" class="back-link">← Tilbage til oversigt</a>
+  <div class="topbar">
+    <a href="../" class="back-link" data-i18n="back">← Tilbage til oversigt</a>
+    <div class="lang-switcher" role="group" aria-label="Language">
+      <button data-lang="da" class="active">🇩🇰 DA</button>
+      <button data-lang="en">🇬🇧 EN</button>
+      <button data-lang="ar">🇸🇦 AR</button>
+    </div>
+  </div>
 
-  <h1>🌊 Vekselstrøm visualizer</h1>
-  <p class="subtitle">Sinuskurve med peak, RMS, middel og frekvens<br><span class="ar">عرض موجة التيار المتردد مع القيمة الفعالة والقصوى والتردد</span></p>
+  <h1 data-i18n="title">🌊 Vekselstrøm visualizer</h1>
+  <p class="subtitle" data-i18n="subtitle">Sinuskurve med peak, RMS, middel og frekvens</p>
 
   <div class="card">
     <div class="controls">
       <div>
-        <label>Peak-spænding U_peak (V)</label>
+        <label for="peakInput" data-i18n="peakLabel">Peak-spænding U_peak (V)</label>
         <input type="range" id="peakInput" min="10" max="500" value="325" oninput="updatePeak(this.value)">
         <input type="number" id="peakNum" value="325" min="1" max="1000" oninput="updatePeak(this.value)">
       </div>
       <div>
-        <label>Frekvens f (Hz)</label>
+        <label for="freqInput" data-i18n="freqLabel">Frekvens f (Hz)</label>
         <input type="range" id="freqInput" min="1" max="200" value="50" oninput="updateFreq(this.value)">
         <input type="number" id="freqNum" value="50" min="1" max="1000" oninput="updateFreq(this.value)">
       </div>
       <div>
-        <label>Visning</label>
-        <select id="display" onchange="draw()" style="width:100%;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px">
-          <option value="all">Alle linjer</option>
-          <option value="sine">Kun sinuskurve</option>
+        <label for="display" data-i18n="displayLabel">Visning</label>
+        <select id="display" onchange="draw()">
+          <option value="all" data-i18n="optAll">Alle linjer</option>
+          <option value="sine" data-i18n="optSine">Kun sinuskurve</option>
         </select>
       </div>
     </div>
@@ -82,55 +91,154 @@
     <canvas id="canvas" width="900" height="350"></canvas>
 
     <div class="legend">
-      <div class="legend-item"><span class="legend-dot" style="background:var(--accent2)"></span>Sinusspænding u(t)</div>
-      <div class="legend-item"><span class="legend-dot" style="background:var(--red)"></span>Peak (top)</div>
-      <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>RMS (effektivværdi)</div>
-      <div class="legend-item"><span class="legend-dot" style="background:var(--accent)"></span>Middel (halv periode)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--accent2)"></span><span data-i18n="legSine">Sinusspænding u(t)</span></div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--red)"></span><span data-i18n="legPeak">Peak (top)</span></div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span><span data-i18n="legRMS">RMS (effektivværdi)</span></div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--accent)"></span><span data-i18n="legMid">Middel (halv periode)</span></div>
     </div>
 
     <div class="results">
       <div class="stat peak">
-        <div class="stat-label">Peak (U<sub>peak</sub> / Û)</div>
+        <div class="stat-label" data-i18n="statPeak">Peak (U<sub>peak</sub> / Û)</div>
         <div class="stat-value" id="v-peak">325 V</div>
       </div>
       <div class="stat peak">
-        <div class="stat-label">Peak-to-peak (U<sub>pp</sub>)</div>
+        <div class="stat-label" data-i18n="statPP">Peak-to-peak (U<sub>pp</sub>)</div>
         <div class="stat-value" id="v-pp">650 V</div>
       </div>
       <div class="stat rms">
-        <div class="stat-label">RMS (effektivværdi)</div>
+        <div class="stat-label" data-i18n="statRMS">RMS (effektivværdi)</div>
         <div class="stat-value" id="v-rms">230 V</div>
       </div>
       <div class="stat">
-        <div class="stat-label">Middel (halv periode)</div>
+        <div class="stat-label" data-i18n="statMid">Middel (halv periode)</div>
         <div class="stat-value" id="v-mid">207 V</div>
       </div>
       <div class="stat">
-        <div class="stat-label">Periodetid T</div>
+        <div class="stat-label" data-i18n="statT">Periodetid T</div>
         <div class="stat-value" id="v-T">20 ms</div>
       </div>
       <div class="stat">
-        <div class="stat-label">Vinkelhastighed ω</div>
+        <div class="stat-label" data-i18n="statW">Vinkelhastighed ω</div>
         <div class="stat-value" id="v-w">314 rad/s</div>
       </div>
     </div>
   </div>
 
   <div class="card">
-    <h3 style="color:var(--accent2);margin-bottom:12px">📚 Formler</h3>
-    <ul style="list-style:none;line-height:2">
+    <h3 style="color:var(--accent2);margin-bottom:12px" data-i18n="formulasTitle">📚 Formler</h3>
+    <ul style="list-style:none;line-height:2;padding-inline-start:0">
       <li>• <code>u(t) = U<sub>peak</sub> · sin(ωt)</code></li>
-      <li>• <code>U<sub>RMS</sub> = U<sub>peak</sub> / √2 ≈ 0,707 · U<sub>peak</sub></code></li>
-      <li>• <code>U<sub>middel</sub> = 2 · U<sub>peak</sub> / π ≈ 0,637 · U<sub>peak</sub></code> (halv periode)</li>
+      <li>• <code>U<sub>RMS</sub> = U<sub>peak</sub> / √2 ≈ 0.707 · U<sub>peak</sub></code></li>
+      <li>• <code>U<sub>avg</sub> = 2 · U<sub>peak</sub> / π ≈ 0.637 · U<sub>peak</sub></code> <span data-i18n="halfPeriod">(halv periode)</span></li>
       <li>• <code>T = 1 / f</code> &nbsp;&nbsp; <code>ω = 2πf</code></li>
     </ul>
-    <p style="margin-top:12px;color:var(--muted)">
-      💡 Standard <b>230 V</b> netspænding er en RMS-værdi. Peak-værdien er faktisk <b>325 V</b>.
-    </p>
+    <p style="margin-top:12px;color:var(--muted)" id="grid-info"></p>
   </div>
 </div>
 
 <script>
+  const I18N = {
+    da: {
+      back: "← Tilbage til oversigt",
+      title: "🌊 Vekselstrøm visualizer",
+      subtitle: "Sinuskurve med peak, RMS, middel og frekvens",
+      peakLabel: "Peak-spænding U_peak (V)",
+      freqLabel: "Frekvens f (Hz)",
+      displayLabel: "Visning",
+      optAll: "Alle linjer",
+      optSine: "Kun sinuskurve",
+      legSine: "Sinusspænding u(t)",
+      legPeak: "Peak (top)",
+      legRMS: "RMS (effektivværdi)",
+      legMid: "Middel (halv periode)",
+      statPeak: "Peak (U<sub>peak</sub> / Û)",
+      statPP: "Peak-to-peak (U<sub>pp</sub>)",
+      statRMS: "RMS (effektivværdi)",
+      statMid: "Middel (halv periode)",
+      statT: "Periodetid T",
+      statW: "Vinkelhastighed ω",
+      formulasTitle: "📚 Formler",
+      halfPeriod: "(halv periode)",
+      gridInfoFn: (peak, rms) => `💡 Standardnetspændingen 230 V er en RMS-værdi. Ved den valgte peak på <b>${peak.toFixed(0)} V</b> svarer RMS til <b>${rms.toFixed(0)} V</b>.`,
+      labelPeak: "Peak", labelRMS: "RMS", labelMid: "Middel",
+      onePeriod: (T) => "1 periode (T = " + T + " ms)"
+    },
+    en: {
+      back: "← Back to overview",
+      title: "🌊 AC visualizer",
+      subtitle: "Sine curve with peak, RMS, average and frequency",
+      peakLabel: "Peak voltage U_peak (V)",
+      freqLabel: "Frequency f (Hz)",
+      displayLabel: "Display",
+      optAll: "All lines",
+      optSine: "Sine curve only",
+      legSine: "Sinusoidal voltage u(t)",
+      legPeak: "Peak",
+      legRMS: "RMS (effective value)",
+      legMid: "Average (half period)",
+      statPeak: "Peak (U<sub>peak</sub> / Û)",
+      statPP: "Peak-to-peak (U<sub>pp</sub>)",
+      statRMS: "RMS (effective value)",
+      statMid: "Average (half period)",
+      statT: "Period T",
+      statW: "Angular frequency ω",
+      formulasTitle: "📚 Formulas",
+      halfPeriod: "(half period)",
+      gridInfoFn: (peak, rms) => `💡 The standard 230 V mains voltage is an RMS value. With the chosen peak of <b>${peak.toFixed(0)} V</b>, the RMS value is <b>${rms.toFixed(0)} V</b>.`,
+      labelPeak: "Peak", labelRMS: "RMS", labelMid: "Avg",
+      onePeriod: (T) => "1 period (T = " + T + " ms)"
+    },
+    ar: {
+      back: "→ العودة إلى القائمة",
+      title: "🌊 مُصوّر التيار المتردد",
+      subtitle: "منحنى جيبي مع القيمة القصوى والفعّالة والمتوسط والتردد",
+      peakLabel: "الجهد الأقصى U_peak (V)",
+      freqLabel: "التردد f (Hz)",
+      displayLabel: "العرض",
+      optAll: "جميع الخطوط",
+      optSine: "الموجة الجيبية فقط",
+      legSine: "الجهد الجيبي u(t)",
+      legPeak: "القيمة القصوى",
+      legRMS: "القيمة الفعّالة (RMS)",
+      legMid: "المتوسط (نصف دورة)",
+      statPeak: "القيمة القصوى (U<sub>peak</sub> / Û)",
+      statPP: "ذروة-إلى-ذروة (U<sub>pp</sub>)",
+      statRMS: "القيمة الفعّالة (RMS)",
+      statMid: "المتوسط (نصف دورة)",
+      statT: "زمن الدورة T",
+      statW: "السرعة الزاوية ω",
+      formulasTitle: "📚 الصيغ",
+      halfPeriod: "(نصف دورة)",
+      gridInfoFn: (peak, rms) => `💡 جهد الشبكة القياسي 230 V هو قيمة فعّالة. عند ذروة <b>${peak.toFixed(0)} V</b> تكون القيمة الفعّالة <b>${rms.toFixed(0)} V</b>.`,
+      labelPeak: "القمة", labelRMS: "RMS", labelMid: "المتوسط",
+      onePeriod: (T) => "دورة واحدة (T = " + T + " ms)"
+    }
+  };
+  let currentLang = 'da';
+  function t(key) { return (I18N[currentLang] && I18N[currentLang][key]) || I18N.da[key] || key; }
+
+  function applyLang(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const v = t(key);
+      if (v) el.innerHTML = v;
+    });
+    document.querySelectorAll('.lang-switcher button').forEach(b => {
+      b.classList.toggle('active', b.dataset.lang === lang);
+    });
+    try { localStorage.setItem('elteori-lang', lang); } catch (e) {}
+    update();
+  }
+  document.querySelectorAll('.lang-switcher button').forEach(b => {
+    b.addEventListener('click', () => applyLang(b.dataset.lang));
+  });
+  let savedLang = 'da';
+  try { savedLang = localStorage.getItem('elteori-lang') || 'da'; } catch (e) {}
+
   let peak = 325, freq = 50;
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
@@ -151,7 +259,7 @@
   function update() {
     const rms = peak / Math.sqrt(2);
     const mid = 2 * peak / Math.PI;
-    const T = 1000 / freq;  // ms
+    const T = 1000 / freq;
     const omega = 2 * Math.PI * freq;
 
     document.getElementById('v-peak').textContent = peak.toFixed(1) + ' V';
@@ -161,6 +269,9 @@
     document.getElementById('v-T').textContent = T < 10 ? T.toFixed(2) + ' ms' : T.toFixed(1) + ' ms';
     document.getElementById('v-w').textContent = omega.toFixed(0) + ' rad/s';
 
+    const fn = (I18N[currentLang] && I18N[currentLang].gridInfoFn) || I18N.da.gridInfoFn;
+    document.getElementById('grid-info').innerHTML = fn(peak, rms);
+
     draw();
   }
 
@@ -169,13 +280,12 @@
     const h = canvas.height = 350;
     ctx.clearRect(0, 0, w, h);
 
-    const cx = h / 2;  // center y
+    const cx = h / 2;
     const margin = 40;
     const plotW = w - 2*margin;
     const periods = 2;
     const scale = (h/2 - 30) / peak;
 
-    // Grid
     ctx.strokeStyle = '#2a3f56';
     ctx.lineWidth = 0.5;
     for (let i = 0; i <= periods * 4; i++) {
@@ -187,7 +297,6 @@
       ctx.beginPath(); ctx.moveTo(margin, y); ctx.lineTo(w-margin, y); ctx.stroke();
     }
 
-    // Akser
     ctx.strokeStyle = '#8da4b8';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
@@ -205,7 +314,6 @@
 
     const display = document.getElementById('display').value;
 
-    // Peak-linjer (rød)
     if (display === 'all') {
       ctx.strokeStyle = '#ff6b6b';
       ctx.lineWidth = 1; ctx.setLineDash([5, 5]);
@@ -216,7 +324,6 @@
       ctx.lineTo(w-margin, cx + peak * scale);
       ctx.stroke();
 
-      // RMS-linjer (grøn)
       const rms = peak / Math.sqrt(2);
       ctx.strokeStyle = '#6dd9b3';
       ctx.beginPath();
@@ -226,7 +333,6 @@
       ctx.lineTo(w-margin, cx + rms * scale);
       ctx.stroke();
 
-      // Middelværdi (gul)
       const mid = 2 * peak / Math.PI;
       ctx.strokeStyle = '#ffd700';
       ctx.beginPath();
@@ -235,36 +341,34 @@
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Labels
       ctx.fillStyle = '#ff6b6b';
-      ctx.fillText('Peak: ' + peak.toFixed(0) + ' V', w-margin-90, cx - peak * scale - 6);
+      ctx.fillText(t('labelPeak') + ': ' + peak.toFixed(0) + ' V', w-margin-110, cx - peak * scale - 6);
       ctx.fillStyle = '#6dd9b3';
-      ctx.fillText('RMS: ' + (peak/Math.sqrt(2)).toFixed(0) + ' V', w-margin-90, cx - rms * scale - 6);
+      ctx.fillText(t('labelRMS') + ': ' + (peak/Math.sqrt(2)).toFixed(0) + ' V', w-margin-110, cx - rms * scale - 6);
       ctx.fillStyle = '#ffd700';
-      ctx.fillText('Middel: ' + (2*peak/Math.PI).toFixed(0) + ' V', w-margin-110, cx - mid * scale - 6);
+      ctx.fillText(t('labelMid') + ': ' + (2*peak/Math.PI).toFixed(0) + ' V', w-margin-110, cx - mid * scale - 6);
     }
     ctx.setLineDash([]);
 
-    // Sinuskurven
     ctx.strokeStyle = '#4dd0e1';
     ctx.lineWidth = 2;
     ctx.beginPath();
     for (let i = 0; i <= plotW; i++) {
       const x = margin + i;
-      const t = (i / plotW) * periods;  // antal perioder
-      const y = cx - peak * Math.sin(2 * Math.PI * t) * scale;
+      const tt = (i / plotW) * periods;
+      const y = cx - peak * Math.sin(2 * Math.PI * tt) * scale;
       if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     }
     ctx.stroke();
 
-    // Periode-markering
     ctx.fillStyle = '#8da4b8';
     ctx.font = '11px sans-serif';
-    ctx.fillText('1 periode (T = ' + (1000/freq).toFixed(1) + ' ms)', margin + plotW/4 - 50, h - 4);
+    const T = (1000/freq).toFixed(1);
+    ctx.fillText(t('onePeriod')(T), margin + plotW/4 - 50, h - 4);
   }
 
   window.addEventListener('resize', draw);
-  update();
+  applyLang(savedLang);
 </script>
 </body>
 </html>

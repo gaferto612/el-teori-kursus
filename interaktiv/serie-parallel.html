@@ -17,36 +17,38 @@
     --border: #2a3f56;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    padding: 20px;
-    line-height: 1.6;
-  }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Naskh Arabic", sans-serif; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.6; }
+  html[dir="rtl"] body { font-family: "Noto Naskh Arabic", "Segoe UI", -apple-system, sans-serif; }
   .container { max-width: 900px; margin: 0 auto; }
   h1 { color: var(--accent); font-size: 1.8rem; margin-bottom: 0.5rem; }
-  .subtitle { color: var(--muted); margin-bottom: 2rem; }
-  .ar { color: var(--muted); font-size: 0.85em; direction: rtl; }
+  .subtitle { color: var(--muted); margin-bottom: 1.5rem; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+  .lang-switcher { display: flex; gap: 4px; }
+  .lang-switcher button { background: var(--card); color: var(--text); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-family: inherit; margin: 0; }
+  .lang-switcher button.active { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 700; }
+  .lang-switcher button:hover:not(.active) { border-color: var(--accent2); }
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
   .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
-  .tab { background: var(--card); color: var(--text); border: 1px solid var(--border); padding: 10px 20px; border-radius: 8px; cursor: pointer; flex: 1; font-weight: 600; }
+  .tab { background: var(--card); color: var(--text); border: 1px solid var(--border); padding: 10px 20px; border-radius: 8px; cursor: pointer; flex: 1; font-weight: 600; font-family: inherit; }
   .tab.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-  .resistor-row { display: grid; grid-template-columns: 80px 1fr 100px; gap: 12px; align-items: center; margin-bottom: 12px; }
+  .resistor-row { display: grid; grid-template-columns: 80px 1fr 110px; gap: 12px; align-items: center; margin-bottom: 12px; }
+  html[dir="rtl"] .resistor-row { grid-template-columns: 110px 1fr 80px; }
   input[type="number"] {
     background: var(--bg); color: var(--text); border: 1px solid var(--border);
     border-radius: 8px; padding: 10px; font-size: 1rem; font-family: inherit;
   }
   input[type="number"]:focus { outline: none; border-color: var(--accent); }
-  .resistor-label { color: var(--accent2); font-weight: 600; }
+  .resistor-label { color: var(--accent2); font-weight: 600; direction: ltr; }
   .voltage-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
-  .voltage-section .resistor-row { grid-template-columns: 200px 1fr 100px; }
+  .voltage-section .resistor-row { grid-template-columns: 200px 1fr 110px; }
+  html[dir="rtl"] .voltage-section .resistor-row { grid-template-columns: 110px 1fr 200px; }
   .results { background: rgba(109, 217, 179, 0.05); border-left: 3px solid var(--green);
              padding: 16px; border-radius: 4px; margin-top: 20px; }
+  html[dir="rtl"] .results { border-left: none; border-right: 3px solid var(--green); }
   .results h3 { color: var(--green); margin-bottom: 12px; }
-  .result-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed rgba(141,164,184,0.2); }
+  .result-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed rgba(141,164,184,0.2); gap: 12px; }
   .result-row:last-child { border-bottom: none; }
-  .result-val { color: var(--accent); font-weight: 600; font-family: "Courier New", monospace; }
+  .result-val { color: var(--accent); font-weight: 600; font-family: "Courier New", monospace; direction: ltr; }
   .diagram {
     background: var(--bg);
     border: 1px solid var(--border);
@@ -55,28 +57,39 @@
     text-align: center;
     margin: 16px 0;
     font-family: "Courier New", monospace;
-    font-size: 0.9rem;
-    line-height: 1.4;
+    font-size: 0.95rem;
+    line-height: 1.5;
     overflow-x: auto;
+    white-space: pre;
+    direction: ltr;
   }
   button { background: var(--accent); color: var(--bg); border: none; padding: 8px 16px;
-           border-radius: 8px; cursor: pointer; font-weight: 600; margin-right: 8px; }
+           border-radius: 8px; cursor: pointer; font-weight: 600; margin-right: 8px; font-family: inherit; }
+  html[dir="rtl"] button { margin-right: 0; margin-left: 8px; }
   button:hover { opacity: 0.85; }
   button.secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
-  .back-link { display: inline-block; color: var(--accent2); text-decoration: none; margin-bottom: 20px; }
+  .back-link { display: inline-block; color: var(--accent2); text-decoration: none; }
+  .back-link:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
 <div class="container">
-  <a href="../README.md" class="back-link">← Tilbage til oversigt</a>
+  <div class="topbar">
+    <a href="../" class="back-link" data-i18n="back">← Tilbage til oversigt</a>
+    <div class="lang-switcher" role="group" aria-label="Language">
+      <button data-lang="da" class="active">🇩🇰 DA</button>
+      <button data-lang="en">🇬🇧 EN</button>
+      <button data-lang="ar">🇸🇦 AR</button>
+    </div>
+  </div>
 
-  <h1>🔁 Serie & parallel modstand</h1>
-  <p class="subtitle">Beregner resulterende modstand, fordeling af strøm og spænding<br><span class="ar">حاسبة المقاومات على التسلسل والتوازي</span></p>
+  <h1 data-i18n="title">🔁 Serie &amp; parallel modstand</h1>
+  <p class="subtitle" data-i18n="subtitle">Beregner resulterende modstand og fordeling af strøm og spænding</p>
 
   <div class="card">
     <div class="tabs">
-      <button class="tab active" id="tab-serie" onclick="setMode('serie')">Serie ──[R]──[R]──</button>
-      <button class="tab" id="tab-parallel" onclick="setMode('parallel')">Parallel ╠══╣</button>
+      <button class="tab active" id="tab-serie" onclick="setMode('serie')" data-i18n="tabSerie">Serie ──[R]──[R]──</button>
+      <button class="tab" id="tab-parallel" onclick="setMode('parallel')" data-i18n="tabParallel">Parallel ╠══╣</button>
     </div>
 
     <div id="resistors-container">
@@ -84,28 +97,111 @@
     </div>
 
     <div style="margin-bottom:16px">
-      <button onclick="addResistor()">+ Tilføj modstand</button>
-      <button class="secondary" onclick="removeResistor()">− Fjern</button>
+      <button onclick="addResistor()" data-i18n="addBtn">+ Tilføj modstand</button>
+      <button class="secondary" onclick="removeResistor()" data-i18n="removeBtn">− Fjern</button>
     </div>
 
     <div class="voltage-section">
       <div class="resistor-row">
-        <span class="resistor-label">Spænding U (V) <span class="ar">الجهد</span></span>
+        <span class="resistor-label" data-i18n="voltageLabel">Spænding U (V)</span>
         <input type="number" id="voltage" step="any" placeholder="fx 12" oninput="calculate()">
-        <span style="color:var(--muted)">valgfri</span>
+        <span style="color:var(--muted)" data-i18n="optional">valgfri</span>
       </div>
     </div>
 
     <div class="diagram" id="diagram"></div>
 
     <div class="results" id="results">
-      <h3 id="results-title">Resultater</h3>
+      <h3 id="results-title" data-i18n="resultsSerie">Serieforbindelse — Resultater</h3>
       <div id="output"></div>
     </div>
   </div>
 </div>
 
 <script>
+  const I18N = {
+    da: {
+      back: "← Tilbage til oversigt",
+      title: "🔁 Serie & parallel modstand",
+      subtitle: "Beregner resulterende modstand og fordeling af strøm og spænding",
+      tabSerie: "Serie ──[R]──[R]──",
+      tabParallel: "Parallel ╠══╣",
+      addBtn: "+ Tilføj modstand",
+      removeBtn: "− Fjern",
+      voltageLabel: "Spænding U (V)",
+      optional: "valgfri",
+      resultsSerie: "Serieforbindelse — Resultater",
+      resultsParallel: "Parallelforbindelse — Resultater",
+      Rtot: "Resulterende modstand:",
+      Itot: "Total strøm I:",
+      Ptot: "Total effekt P:",
+      perR: "Per modstand:",
+      maxR: "Maks 5 modstande",
+      minR: "Min 2 modstande"
+    },
+    en: {
+      back: "← Back to overview",
+      title: "🔁 Series & parallel resistance",
+      subtitle: "Calculates equivalent resistance and the distribution of current and voltage",
+      tabSerie: "Series ──[R]──[R]──",
+      tabParallel: "Parallel ╠══╣",
+      addBtn: "+ Add resistor",
+      removeBtn: "− Remove",
+      voltageLabel: "Voltage U (V)",
+      optional: "optional",
+      resultsSerie: "Series circuit — Results",
+      resultsParallel: "Parallel circuit — Results",
+      Rtot: "Equivalent resistance:",
+      Itot: "Total current I:",
+      Ptot: "Total power P:",
+      perR: "Per resistor:",
+      maxR: "Maximum 5 resistors",
+      minR: "Minimum 2 resistors"
+    },
+    ar: {
+      back: "→ العودة إلى القائمة",
+      title: "🔁 المقاومات على التوالي والتوازي",
+      subtitle: "احسب المقاومة المكافئة وتوزيع التيار والجهد",
+      tabSerie: "توالي ──[R]──[R]──",
+      tabParallel: "توازي ╠══╣",
+      addBtn: "+ إضافة مقاومة",
+      removeBtn: "− حذف",
+      voltageLabel: "الجهد U (V)",
+      optional: "اختياري",
+      resultsSerie: "دائرة التوالي — النتائج",
+      resultsParallel: "دائرة التوازي — النتائج",
+      Rtot: "المقاومة المكافئة:",
+      Itot: "التيار الكلي I:",
+      Ptot: "القدرة الكلية P:",
+      perR: "لكل مقاومة:",
+      maxR: "الحد الأقصى 5 مقاومات",
+      minR: "الحد الأدنى مقاومتان"
+    }
+  };
+  let currentLang = 'da';
+  function t(key) { return (I18N[currentLang] && I18N[currentLang][key]) || I18N.da[key] || key; }
+
+  function applyLang(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const v = t(key);
+      if (v) el.innerHTML = v;
+    });
+    document.querySelectorAll('.lang-switcher button').forEach(b => {
+      b.classList.toggle('active', b.dataset.lang === lang);
+    });
+    try { localStorage.setItem('elteori-lang', lang); } catch (e) {}
+    calculate();
+  }
+  document.querySelectorAll('.lang-switcher button').forEach(b => {
+    b.addEventListener('click', () => applyLang(b.dataset.lang));
+  });
+  let savedLang = 'da';
+  try { savedLang = localStorage.getItem('elteori-lang') || 'da'; } catch (e) {}
+
   let mode = 'serie';
   let resistors = [100, 220, 470];
 
@@ -117,13 +213,13 @@
   }
 
   function addResistor() {
-    if (resistors.length >= 5) { alert('Maks 5 modstande'); return; }
+    if (resistors.length >= 5) { alert(t('maxR')); return; }
     resistors.push(100);
     render();
   }
 
   function removeResistor() {
-    if (resistors.length <= 2) { alert('Min 2 modstande'); return; }
+    if (resistors.length <= 2) { alert(t('minR')); return; }
     resistors.pop();
     render();
   }
@@ -172,24 +268,24 @@
     }
 
     let html = `
-      <div class="result-row"><span>Resulterende modstand:</span><span class="result-val">${formatOhm(Rtot)}</span></div>
-      <div class="result-row" style="font-size:0.9em;color:var(--muted)"><span colspan=2>${formula}</span></div>
+      <div class="result-row"><span>${t('Rtot')}</span><span class="result-val">${formatOhm(Rtot)}</span></div>
+      <div class="result-row" style="font-size:0.9em;color:var(--muted)"><span style="direction:ltr">${formula}</span></div>
     `;
 
     const U = parseFloat(document.getElementById('voltage').value);
     if (!isNaN(U) && U > 0) {
       const Itot = U / Rtot;
-      html += `<div class="result-row"><span>Total strøm I:</span><span class="result-val">${formatVal(Itot, 'A')}</span></div>`;
-      html += `<div class="result-row"><span>Total effekt P:</span><span class="result-val">${formatVal(U * Itot, 'W')}</span></div>`;
+      html += `<div class="result-row"><span>${t('Itot')}</span><span class="result-val">${formatVal(Itot, 'A')}</span></div>`;
+      html += `<div class="result-row"><span>${t('Ptot')}</span><span class="result-val">${formatVal(U * Itot, 'W')}</span></div>`;
 
-      html += '<h4 style="margin-top:16px;color:var(--accent2)">Per modstand:</h4>';
+      html += `<h4 style="margin-top:16px;color:var(--accent2)">${t('perR')}</h4>`;
       valid.forEach((r, i) => {
         let U_r, I_r;
         if (mode === 'serie') {
-          I_r = Itot;  // strømmen er ens i serie
+          I_r = Itot;
           U_r = I_r * r;
         } else {
-          U_r = U;  // spændingen er ens i parallel
+          U_r = U;
           I_r = U_r / r;
         }
         const P_r = U_r * I_r;
@@ -198,7 +294,7 @@
     }
 
     document.getElementById('output').innerHTML = html;
-    document.getElementById('results-title').textContent = mode === 'serie' ? 'Serieforbindelse — Resultater' : 'Parallelforbindelse — Resultater';
+    document.getElementById('results-title').textContent = mode === 'serie' ? t('resultsSerie') : t('resultsParallel');
     drawDiagram(valid);
   }
 
@@ -207,9 +303,11 @@
     if (mode === 'serie') {
       d = '──' + rs.map((r,i) => `[R${i+1}]`).join('──') + '──';
     } else {
-      d = '   ┌' + rs.map((r,i) => `[R${i+1}]`).join('─┬─') + '─┐\n';
-      d += '   │' + rs.map(() => '────').join('─┴─') + '─│\n';
-      d += '───┴─' + rs.map(() => '').join('') + '─────';
+      const labels = rs.map((r,i) => `[R${i+1}]`);
+      const lines = labels.map(lbl => '   ├──' + lbl + '──┤');
+      d = '   ┌' + '─'.repeat(8) + '┐\n';
+      d += lines.join('\n') + '\n';
+      d += '───┴' + '─'.repeat(8) + '┴───';
     }
     document.getElementById('diagram').textContent = d;
   }
@@ -221,6 +319,7 @@
     return (v*1e6).toFixed(2) + ' μ' + unit;
   }
 
+  applyLang(savedLang);
   render();
 </script>
 </body>

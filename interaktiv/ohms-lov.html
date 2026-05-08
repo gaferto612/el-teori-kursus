@@ -16,12 +16,13 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Naskh Arabic", sans-serif;
     background: var(--bg);
     color: var(--text);
     padding: 20px;
     line-height: 1.6;
   }
+  html[dir="rtl"] body { font-family: "Noto Naskh Arabic", "Segoe UI", -apple-system, sans-serif; }
   .container { max-width: 800px; margin: 0 auto; }
   h1 {
     color: var(--accent);
@@ -30,10 +31,34 @@
   }
   .subtitle {
     color: var(--muted);
-    margin-bottom: 2rem;
-    direction: rtl;
-    text-align: right;
+    margin-bottom: 1.5rem;
   }
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .lang-switcher { display: flex; gap: 4px; }
+  .lang-switcher button {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin: 0;
+  }
+  .lang-switcher button.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+  .lang-switcher button:hover:not(.active) { border-color: var(--accent2); }
   .card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -52,7 +77,6 @@
     margin-bottom: 6px;
     color: var(--accent2);
   }
-  .ar { color: var(--muted); font-size: 0.85em; margin-right: 8px; direction: rtl; }
   input[type="number"] {
     background: var(--bg);
     color: var(--text);
@@ -78,6 +102,7 @@
     border-left: 3px solid var(--accent2);
     border-radius: 4px;
   }
+  html[dir="rtl"] .results { border-left: none; border-right: 3px solid var(--accent2); }
   .results h3 { color: var(--accent2); margin-bottom: 8px; font-size: 1.1rem; }
   .formula {
     background: var(--bg);
@@ -86,6 +111,8 @@
     font-family: "Courier New", monospace;
     margin: 8px 0;
     color: var(--accent);
+    direction: ltr;
+    text-align: left;
   }
   button {
     background: var(--accent);
@@ -96,13 +123,13 @@
     cursor: pointer;
     font-weight: 600;
     margin-top: 10px;
+    font-family: inherit;
   }
   button:hover { opacity: 0.85; }
   .back-link {
     display: inline-block;
     color: var(--accent2);
     text-decoration: none;
-    margin-bottom: 20px;
   }
   .back-link:hover { text-decoration: underline; }
   .info {
@@ -113,6 +140,7 @@
     margin-top: 20px;
     font-size: 0.95rem;
   }
+  html[dir="rtl"] .info { border-left: none; border-right: 3px solid var(--accent); }
   @media (max-width: 600px) {
     .grid { grid-template-columns: 1fr; }
   }
@@ -120,65 +148,132 @@
 </head>
 <body>
 <div class="container">
-  <a href="../README.md" class="back-link">← Tilbage til oversigt</a>
+  <div class="topbar">
+    <a href="../" class="back-link" data-i18n="back">← Tilbage til oversigt</a>
+    <div class="lang-switcher" role="group" aria-label="Language">
+      <button data-lang="da" class="active" aria-pressed="true">🇩🇰 DA</button>
+      <button data-lang="en" aria-pressed="false">🇬🇧 EN</button>
+      <button data-lang="ar" aria-pressed="false">🇸🇦 AR</button>
+    </div>
+  </div>
 
-  <h1>⚡ Ohms lov-beregner</h1>
-  <p class="subtitle">حاسبة قانون أوم — أدخل قيمتين فقط، احسب الباقي</p>
+  <h1 data-i18n="title">⚡ Ohms lov-beregner</h1>
+  <p class="subtitle" data-i18n="subtitle">Indtast to af de fire værdier — så beregnes resten</p>
 
   <div class="card">
-    <p style="margin-bottom:16px;color:var(--muted)">
-      Indtast <b>to af de fire</b> værdier, så beregner systemet de øvrige.<br>
-      <span class="ar">أدخل قيمتين من الأربعة، وسيحسب النظام الباقي.</span>
+    <p style="margin-bottom:16px;color:var(--muted)" data-i18n="hint">
+      Indtast <b>to af de fire</b> værdier, så beregner systemet de øvrige.
     </p>
 
     <div class="grid">
       <div class="input-group">
-        <label>Spænding U (V) <span class="ar">الجهد</span></label>
-        <input type="number" id="U" step="any" placeholder="fx 230">
+        <label for="U" data-i18n="labelU">Spænding U (V)</label>
+        <input type="number" id="U" step="any" data-i18n-placeholder="phU" placeholder="fx 230">
       </div>
       <div class="input-group">
-        <label>Strøm I (A) <span class="ar">التيار</span></label>
-        <input type="number" id="I" step="any" placeholder="fx 0.5">
+        <label for="I" data-i18n="labelI">Strøm I (A)</label>
+        <input type="number" id="I" step="any" data-i18n-placeholder="phI" placeholder="fx 0.5">
       </div>
       <div class="input-group">
-        <label>Modstand R (Ω) <span class="ar">المقاومة</span></label>
-        <input type="number" id="R" step="any" placeholder="fx 460">
+        <label for="R" data-i18n="labelR">Modstand R (Ω)</label>
+        <input type="number" id="R" step="any" data-i18n-placeholder="phR" placeholder="fx 460">
       </div>
       <div class="input-group">
-        <label>Effekt P (W) <span class="ar">القدرة</span></label>
-        <input type="number" id="P" step="any" placeholder="fx 115">
+        <label for="P" data-i18n="labelP">Effekt P (W)</label>
+        <input type="number" id="P" step="any" data-i18n-placeholder="phP" placeholder="fx 115">
       </div>
     </div>
 
-    <button onclick="reset()">🔄 Nulstil</button>
+    <button onclick="resetAll()" data-i18n="reset">🔄 Nulstil</button>
 
     <div class="results" id="results" style="display:none">
-      <h3>Resultater</h3>
+      <h3 data-i18n="results">Resultater</h3>
       <div id="output"></div>
     </div>
 
     <div class="info">
-      💡 <b>Formler:</b><br>
-      <div class="formula">U = R · I</div>
+      💡 <b data-i18n="formulasLabel">Formler:</b>
+      <div class="formula">U = R · I = I · R</div>
       <div class="formula">P = U · I = I² · R = U² / R</div>
     </div>
   </div>
 </div>
 
 <script>
-  const inputs = ['U', 'I', 'R', 'P'];
-  inputs.forEach(id => {
-    document.getElementById(id).addEventListener('input', calculate);
+  const I18N = {
+    da: {
+      back: "← Tilbage til oversigt",
+      title: "⚡ Ohms lov-beregner",
+      subtitle: "Indtast to af de fire værdier — så beregnes resten",
+      hint: "Indtast <b>to af de fire</b> værdier, så beregner systemet de øvrige.",
+      labelU: "Spænding U (V)", labelI: "Strøm I (A)", labelR: "Modstand R (Ω)", labelP: "Effekt P (W)",
+      phU: "fx 230", phI: "fx 0.5", phR: "fx 460", phP: "fx 115",
+      reset: "🔄 Nulstil", results: "Resultater", formulasLabel: "Formler:"
+    },
+    en: {
+      back: "← Back to overview",
+      title: "⚡ Ohm's law calculator",
+      subtitle: "Enter two of the four values — the rest is calculated",
+      hint: "Enter <b>two of the four</b> values and the rest is calculated automatically.",
+      labelU: "Voltage U (V)", labelI: "Current I (A)", labelR: "Resistance R (Ω)", labelP: "Power P (W)",
+      phU: "e.g. 230", phI: "e.g. 0.5", phR: "e.g. 460", phP: "e.g. 115",
+      reset: "🔄 Reset", results: "Results", formulasLabel: "Formulas:"
+    },
+    ar: {
+      back: "→ العودة إلى القائمة",
+      title: "⚡ حاسبة قانون أوم",
+      subtitle: "أدخل قيمتين من أصل أربع — وسيُحسب الباقي",
+      hint: "أدخل <b>قيمتين من الأربعة</b>، وسيحسب النظام الباقي تلقائياً.",
+      labelU: "الجهد U (V)", labelI: "التيار I (A)", labelR: "المقاومة R (Ω)", labelP: "القدرة P (W)",
+      phU: "مثلاً 230", phI: "مثلاً 0.5", phR: "مثلاً 460", phP: "مثلاً 115",
+      reset: "🔄 إعادة ضبط", results: "النتائج", formulasLabel: "الصيغ:"
+    }
+  };
+
+  function applyLang(lang) {
+    const dict = I18N[lang] || I18N.da;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (dict[key] !== undefined) el.innerHTML = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      if (dict[key] !== undefined) el.placeholder = dict[key];
+    });
+    document.querySelectorAll('.lang-switcher button').forEach(b => {
+      const active = b.dataset.lang === lang;
+      b.classList.toggle('active', active);
+      b.setAttribute('aria-pressed', active);
+    });
+    try { localStorage.setItem('elteori-lang', lang); } catch (e) {}
+    if (typeof recalc === 'function') recalc();
+  }
+
+  document.querySelectorAll('.lang-switcher button').forEach(b => {
+    b.addEventListener('click', () => applyLang(b.dataset.lang));
   });
 
-  function calculate() {
+  let savedLang = 'da';
+  try { savedLang = localStorage.getItem('elteori-lang') || 'da'; } catch (e) {}
+  applyLang(savedLang);
+
+  const inputs = ['U', 'I', 'R', 'P'];
+  inputs.forEach(id => {
+    document.getElementById(id).addEventListener('input', recalc);
+  });
+
+  function recalc() {
     const vals = {};
     inputs.forEach(id => {
       const el = document.getElementById(id);
-      el.classList.remove('calculated');
-      const v = parseFloat(el.value);
-      if (!isNaN(v) && v > 0) vals[id] = v;
+      if (!el.classList.contains('calculated')) {
+        const v = parseFloat(el.value);
+        if (!isNaN(v) && v > 0) vals[id] = v;
+      }
     });
+    inputs.forEach(id => document.getElementById(id).classList.remove('calculated'));
 
     const filled = Object.keys(vals);
     if (filled.length < 2) {
@@ -188,28 +283,13 @@
 
     let U = vals.U, I = vals.I, R = vals.R, P = vals.P;
 
-    // Beregningslogik baseret på hvilke værdier der er angivet
-    if (U && I) {
-      R = U / I;
-      P = U * I;
-    } else if (U && R) {
-      I = U / R;
-      P = U * I;
-    } else if (U && P) {
-      I = P / U;
-      R = U / I;
-    } else if (I && R) {
-      U = I * R;
-      P = U * I;
-    } else if (I && P) {
-      U = P / I;
-      R = U / I;
-    } else if (R && P) {
-      I = Math.sqrt(P / R);
-      U = I * R;
-    }
+    if (U && I)        { R = U / I; P = U * I; }
+    else if (U && R)   { I = U / R; P = U * I; }
+    else if (U && P)   { I = P / U; R = U / I; }
+    else if (I && R)   { U = I * R; P = U * I; }
+    else if (I && P)   { U = P / I; R = U / I; }
+    else if (R && P)   { I = Math.sqrt(P / R); U = I * R; }
 
-    // Vis resultater og marker beregnede felter
     if (!filled.includes('U')) { document.getElementById('U').value = U.toPrecision(4); document.getElementById('U').classList.add('calculated'); }
     if (!filled.includes('I')) { document.getElementById('I').value = I.toPrecision(4); document.getElementById('I').classList.add('calculated'); }
     if (!filled.includes('R')) { document.getElementById('R').value = R.toPrecision(4); document.getElementById('R').classList.add('calculated'); }
@@ -230,7 +310,7 @@
     return v.toExponential(2) + ' ' + unit;
   }
 
-  function reset() {
+  function resetAll() {
     inputs.forEach(id => {
       const el = document.getElementById(id);
       el.value = '';
